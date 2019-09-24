@@ -1,6 +1,4 @@
 package com.allstars.Entity;
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.context.annotation.Primary;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,30 +7,31 @@ import java.util.UUID;
 @Entity
 public class User {
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "VARCHAR(40)")
-    private String uuid;
+    @GeneratedValue
+    @Column(name = "uuid", columnDefinition = "BINARY(16)")
+    private UUID uuid;
     @Column
     private String fName;
     @Column
     private String lName;
-    @Column(unique = true)
-    private String emailid;
     @Column
+    private String emailId;
+    @Column(nullable=false)
     private String password;
     @Column
     private Date cTime;
     @Column
     private Date uTime;
 
-    public User(String uuid, String fName, String lName, String emailid, String password, Date cTime, Date uTime) {
+    public User(UUID uuid, String fName, String lName, String emailId, String password, Date cTime, Date uTime) {
         this.uuid = uuid;
         this.fName = fName;
         this.lName = lName;
-        this.emailid = emailid;
+        this.emailId = emailId;
         this.password = password;
         this.cTime = cTime;
         this.uTime = uTime;
+
     }
 
     public User()
@@ -40,11 +39,11 @@ public class User {
 
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -64,12 +63,12 @@ public class User {
         this.lName = lName;
     }
 
-    public String getEmailid() {
-        return emailid;
+    public String getEmailId() {
+        return emailId;
     }
 
-    public void setEmailid(String emailid) {
-        this.emailid = emailid;
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
     }
 
     public String getPassword() {
