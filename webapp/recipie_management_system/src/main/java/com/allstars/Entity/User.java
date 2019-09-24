@@ -1,17 +1,31 @@
 package com.allstars.Entity;
+import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.context.annotation.Primary;
 
+import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
+@Entity
 public class User {
-    private int uuid;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "VARCHAR(40)")
+    private String uuid;
+    @Column
     private String fName;
+    @Column
     private String lName;
+    @Column(unique = true)
     private String emailid;
+    @Column
     private String password;
+    @Column
     private Date cTime;
+    @Column
     private Date uTime;
 
-    public User(int uuid, String fName, String lName, String emailid, String password, Date cTime, Date uTime) {
+    public User(String uuid, String fName, String lName, String emailid, String password, Date cTime, Date uTime) {
         this.uuid = uuid;
         this.fName = fName;
         this.lName = lName;
@@ -26,11 +40,11 @@ public class User {
 
     }
 
-    public int getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(int uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 

@@ -1,22 +1,39 @@
 package com.allstars.Controller;
 
+import com.allstars.Dao.Userdao;
 import com.allstars.Entity.User;
 import com.allstars.Service.userService;
+import org.apache.catalina.filters.ExpiresFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
+import java.util.Date;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/")
 public class studentController {
     @Autowired
     private userService userservice;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public Collection<User> getAllUsers(){
-        return userservice.getAllUsers();
+    @Autowired
+    private Userdao userDao;
+
+
+    @RequestMapping(value = "/create",method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<User> createUser(HttpServletRequest request,
+                                           HttpServletResponse response, @RequestBody User user){
+
+        User u = userDao.save(user);
+        if (u == null){
+            return  new ResponseEntity<User>(u, HttpStatus.BAD_REQUEST);
+        }else{
+         return  new ResponseEntity<User>(user, HttpStatus.CREATED);
+        }
     }
 }
