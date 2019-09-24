@@ -8,10 +8,19 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 @Service
 public class userService {
-    @Autowired
-    private Userdao userdao;
 
-    public Collection<User> getAllUsers(){
-        return userdao.getAllUsers();
+    @Autowired
+    private Userdao userDao;
+
+    public User saveUser(User user){
+
+        try {
+            userDao.save(user);
+        } catch (Exception e){
+            return null;
+        }
+        return  user;
     }
+
+
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ccwebapp.iml" filepath="$PROJECT_DIR$/.idea/ccwebapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webapp/recipie_management_system/recipie_management_system.iml" filepath="$PROJECT_DIR$/webapp/recipie_management_system/recipie_management_system.iml" />
+    </modules>
+  </component>
+</project>
