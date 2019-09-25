@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.util.Collection;
 @Service
 public class UserService implements UserDetailsService {
 
@@ -38,6 +37,10 @@ public class UserService implements UserDetailsService {
 
     public Boolean isEmailPresent(String emailId) {
         return userDao.isEmailPresent(emailId) > 0 ? true : false;
+    }
+
+    public User getUser(String emailId) {
+        return userDao.findByEmailId(emailId);
     }
 
     @Override

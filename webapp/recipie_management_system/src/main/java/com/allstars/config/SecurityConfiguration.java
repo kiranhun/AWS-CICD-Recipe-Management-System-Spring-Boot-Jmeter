@@ -1,7 +1,6 @@
 package com.allstars.config;
 import com.allstars.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;;
@@ -43,36 +42,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"v1/user/self").fullyAuthenticated()
                 .anyRequest().permitAll();
     }
-
-    //    @Autowired
-//    private DataSource dataSource;
-
-//    @Bean
-//    @ConfigurationProperties("spring.datasource")
-//    public DataSource dataSource(){
-//        return DataSourceBuilder.create().build();
-//    }
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception
-//    {
-//        http.authorizeRequests().anyRequest().permitAll().and().httpBasic();
-//
-//       // http.authorizeRequests().antMatchers(HttpMethod.POST).permitAll();
-//    }
-//
-//
-//
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
-//    {
-//        auth.jdbcAuthentication().dataSource(dataSource)
-//                .authoritiesByUsernameQuery("select username, role from user where username=?")
-//                .usersByUsernameQuery("select username, password, 1 as enabled  from user where username=?");
-//    }
-//
-//    @Bean
-//    PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 }

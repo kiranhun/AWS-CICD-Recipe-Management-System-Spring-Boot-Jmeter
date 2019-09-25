@@ -1,10 +1,16 @@
 package com.allstars.Entity;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties(value={"password"}, allowSetters= true)
 public class User {
     @Id
     @GeneratedValue
