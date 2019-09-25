@@ -26,8 +26,9 @@ public class UserService implements UserDetailsService {
     public User saveUser(User user){
 
         try {
+            passwordEncoder = new BCryptPasswordEncoder();
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userDao.save(user);
+            user = userDao.save(user);
         } catch (Exception e){
             return null;
         }
