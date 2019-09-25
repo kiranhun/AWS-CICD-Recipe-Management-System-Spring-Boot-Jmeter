@@ -14,7 +14,7 @@ public class User {
     private String fName;
     @Column
     private String lName;
-    @Column
+    @Column(unique = true, length = 32)
     private String emailId;
     @Column(nullable=false)
     private String password;
@@ -24,7 +24,6 @@ public class User {
     private Date uTime;
 
     public User(UUID uuid, String fName, String lName, String emailId, String password, Date cTime, Date uTime) {
-        this.uuid = uuid;
         this.fName = fName;
         this.lName = lName;
         this.emailId = emailId;
@@ -84,7 +83,9 @@ public class User {
     }
 
     public void setcTime(Date cTime) {
-        this.cTime = cTime;
+        if (this.cTime == null) {
+            this.cTime = new Date();
+        }
     }
 
     public Date getuTime() {
@@ -92,6 +93,8 @@ public class User {
     }
 
     public void setuTime(Date uTime) {
-        this.uTime = uTime;
+        if (this.uTime == null) {
+            this.uTime = new Date();
+        }
     }
 }

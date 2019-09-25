@@ -31,7 +31,7 @@ public class UserController {
 
 
     @RequestMapping(value = "v1/user", method = RequestMethod.POST)
-    public ResponseEntity<RegistrationStatus> createUser(@Valid @RequestBody User user, BindingResult errors,
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult errors,
                                            HttpServletResponse response) throws Exception {
         RegistrationStatus registrationStatus;
 
@@ -41,9 +41,12 @@ public class UserController {
                     registrationStatus);
         }else {
             registrationStatus = new RegistrationStatus();
-            userService.saveUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    registrationStatus);
+            User u = userService.saveUser(user);
+            
+//            return ResponseEntity.status(HttpStatus.CREATED).body(
+//                    registrationStatus);
+            u.setPassword("");
+            return  new ResponseEntity<User>(u, HttpStatus.CREATED);
         }
 //        User u = userService.saveUser(user);
 //        if (u == null){
