@@ -39,7 +39,7 @@ public class BeanFactory {
                                  AuthenticationException authException) throws IOException {
                 response.addHeader("WWW-Authenticate", "Basic realm = "+getRealmName());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().println("Not Logged In");
+                response.getWriter().println("Access denied");
             }
         };
     }

@@ -64,6 +64,19 @@ public class UserController {
         else
             return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userDetails[0]));
     }
+
+    @RequestMapping(value = "v1/user/self", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String Header, @Valid @RequestBody User user, BindingResult errors,
+                                             HttpServletResponse response) throws UnsupportedEncodingException {
+
+        String[] userDetails =  decryptAuthenticationToken(Header);
+
+        if(userService.updateUserInfo(user, userDetails[0], userDetails[1])){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+        }
+    }
     
     public String[] decryptAuthenticationToken(String token) throws UnsupportedEncodingException {
         String[] basicAuthToken = token.split(" ");

@@ -96,8 +96,6 @@ public class User {
     }
 
     public void setuTime(Date uTime) {
-        if (this.uTime == null) {
-            this.uTime = new Date();
-        }
+        this.uTime = new Date();
     }
 }
