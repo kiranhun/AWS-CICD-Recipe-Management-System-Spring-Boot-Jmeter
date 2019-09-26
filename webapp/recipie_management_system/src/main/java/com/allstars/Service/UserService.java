@@ -4,6 +4,7 @@ import com.allstars.Dao.Userdao;
 import com.allstars.Entity.User;
 import com.allstars.Entity.UserDetailsCustom;
 import com.allstars.errors.RegistrationStatus;
+import org.passay.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+
+import java.util.Arrays;
+import java.util.Date;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -57,6 +61,38 @@ public class UserService implements UserDetailsService {
         String passwordErrorMessage = passwordError == null ? "-" : passwordError.getCode();
         RegistrationStatus registrationStatus = new RegistrationStatus(emailIdErrorMessage, passwordErrorMessage);
         return registrationStatus;
+    }
+
+    public Boolean updateUserInfo(User newUser, String emailId, String Password){
+        User currUser = userDao.findByEmailId(emailId);
+        if(currUser.getEmailId().equals(emailId)) {
+            if (!(newUser.getEmailId().equals(currUser.getEmailId()))) {
+                return false;
+            } else {
+                PasswordValidator validator = new PasswordValidator(Arrays.asList(
+                        new LengthRule(9, 30),
+                        new CharacterRule(EnglishCharacterData.UpperCase, 1),
+                        new CharacterRule(EnglishCharacterData.LowerCase, 1),
+                        new CharacterRule(EnglishCharacterData.Digit, 1),
+                        new CharacterRule(EnglishCharacterData.Special, 1),
+                        new WhitespaceRule()));
+                RuleResult result = validator.validate(new PasswordData(newUser.getPassword()));
+                if(result.isValid()) {
+                    currUser.setfName(newUser.getfName());
+                    currUser.setlName(newUser.getlName());
+                    currUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+                    currUser.setuTime(new Date());
+                    userDao.save(currUser);
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        else{
+            return false;
+        }
     }
 
 }
