@@ -12,7 +12,7 @@
 ## Technology Stack
 
 The Recipe Management Web application is developed using Java Spring Boot framework that uses the REST architecture to create,
-update and retrieve user.
+update and retrieve user and Spring Security to secure GET & PUT calls.
 
 ## Build Instructions
 
