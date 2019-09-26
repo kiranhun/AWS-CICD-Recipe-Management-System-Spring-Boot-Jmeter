@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/")
@@ -44,6 +45,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     registrationStatus);
         }else {
+            user.setcTime(new Date());
+            user.setuTime(new Date());
             registrationStatus = new RegistrationStatus();
             User u = userService.saveUser(user);
 
