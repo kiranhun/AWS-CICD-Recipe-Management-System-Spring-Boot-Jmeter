@@ -34,9 +34,6 @@ public class User {
         this.lName = lName;
         this.emailId = emailId;
         this.password = password;
-        this.cTime = cTime;
-        this.uTime = uTime;
-
     }
 
     public User()
