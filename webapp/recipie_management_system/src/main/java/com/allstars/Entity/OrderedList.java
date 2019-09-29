@@ -17,7 +17,7 @@ public class OrderedList {
     private String items;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipie_id")
+    @JoinColumn(name = "recipeid")
     private Recipie recipie;
 
     public OrderedList(int position, String items) {

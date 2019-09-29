@@ -2,11 +2,9 @@ package com.allstars.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -28,6 +26,9 @@ public class User {
     private Date cTime;
     @Column
     private Date uTime;
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "author_id")
+    private Set<Recipie> recipie;
 
     public User(UUID uuid, String fName, String lName, String emailId, String password, Date cTime, Date uTime) {
         this.fName = fName;
@@ -39,6 +40,14 @@ public class User {
     public User()
     {
 
+    }
+
+    public Set<Recipie> getRecipie() {
+        return recipie;
+    }
+
+    public void setRecipie(Set<Recipie> recipie) {
+        this.recipie = recipie;
     }
 
     public UUID getUuid() {
