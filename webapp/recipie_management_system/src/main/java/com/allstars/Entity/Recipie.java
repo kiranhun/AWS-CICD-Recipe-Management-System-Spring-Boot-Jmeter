@@ -1,6 +1,7 @@
 package com.allstars.Entity;
 
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.jpa.repository.Temporal;
 
 import javax.persistence.*;
 
@@ -19,8 +20,8 @@ public class Recipie {
     @Column
     private Date updated_ts;
 
-    @Column
-    private UUID author_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User author_id;
 
     @Column
     private int cook_time_in_min;
@@ -54,7 +55,7 @@ public class Recipie {
     @JoinColumn(unique = true)
     private NutritionInformation nutritionInformation;
 
-    public Recipie(Date created_ts, Date updated_ts, UUID author_id, int cook_time_in_min, int prep_time_in_min, int total_time_in_min, String title, String cuisine, @Range(min = 1, max = 5) String servings, List<String> ingredients, Set<OrderedList> steps, NutritionInformation nutritionInformation) {
+    public Recipie(Date created_ts, Date updated_ts, User author_id, int cook_time_in_min, int prep_time_in_min, int total_time_in_min, String title, String cuisine, @Range(min = 1, max = 5) String servings, List<String> ingredients, Set<OrderedList> steps, NutritionInformation nutritionInformation) {
         this.created_ts = created_ts;
         this.updated_ts = updated_ts;
         this.author_id = author_id;
@@ -100,11 +101,11 @@ public class Recipie {
         }
     }
 
-    public UUID getAuthor_id() {
+    public User getAuthor_id() {
         return author_id;
     }
 
-    public void setAuthor_id(UUID author_id) {
+    public void setAuthor_id(User author_id) {
         this.author_id = author_id;
     }
 
