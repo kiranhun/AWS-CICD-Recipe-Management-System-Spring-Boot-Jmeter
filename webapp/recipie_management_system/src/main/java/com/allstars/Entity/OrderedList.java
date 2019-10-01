@@ -7,7 +7,7 @@ import java.util.UUID;
 public class OrderedList {
     @Id
     @GeneratedValue
-    @Column(name = "uuid", columnDefinition = "BINARY(16)")
+    @Column(name = "OListID", columnDefinition = "BINARY(16)")
     private UUID OListID;
 
     @Column
@@ -16,9 +16,7 @@ public class OrderedList {
     @Column
     private String items;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipeid")
-    private Recipie recipie;
+
 
     public OrderedList(int position, String items) {
         this.position = position;

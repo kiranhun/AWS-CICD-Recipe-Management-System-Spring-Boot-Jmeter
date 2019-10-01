@@ -1,5 +1,6 @@
 package com.allstars.dependencies;
 
+import com.allstars.validators.RecipieValidator;
 import com.allstars.validators.UserValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,11 @@ public class BeanFactory {
     @Bean
     public UserValidator userValidator(){
         return new UserValidator();
+    }
+
+    @Bean
+    public RecipieValidator recipieValidator(){
+        return new RecipieValidator();
     }
 
     @Bean
