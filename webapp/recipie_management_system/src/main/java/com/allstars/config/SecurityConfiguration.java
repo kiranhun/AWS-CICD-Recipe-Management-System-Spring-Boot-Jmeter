@@ -47,5 +47,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST,"v1/recipie/").fullyAuthenticated()
                 .anyRequest().permitAll();
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.DELETE, "/v1/recipie/{id}").fullyAuthenticated()
+                .anyRequest().permitAll();
     }
 }

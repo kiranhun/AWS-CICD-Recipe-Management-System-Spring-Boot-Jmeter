@@ -43,6 +43,10 @@ public class UserService implements UserDetailsService {
         return userDao.isEmailPresent(emailId) > 0 ? true : false;
     }
 
+    public User findByEmailId(String emailId){
+        return userDao.findByEmailId(emailId);
+    }
+
     public User getUser(String emailId) {
         return userDao.findByEmailId(emailId);
     }

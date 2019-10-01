@@ -4,6 +4,7 @@ import com.allstars.Dao.Userdao;
 import com.allstars.Entity.Recipie;
 import com.allstars.Entity.User;
 import com.allstars.Service.RecipieService;
+import com.allstars.Service.UserService;
 import com.allstars.errors.RecipieCreationStatus;
 import com.allstars.validators.RecipieValidator;
 import com.allstars.validators.UserValidator;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 @RestController
 public class RecipieController {
@@ -28,9 +30,6 @@ public class RecipieController {
 
     @Autowired
     private RecipieValidator recipieValidator;
-
-    @Autowired
-    private Userdao userdao;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
@@ -52,6 +51,31 @@ public class RecipieController {
             Recipie newrecipie = recipieService.SaveRecipie(recipie, authDetails[0]);
             return new ResponseEntity<Recipie>(newrecipie, HttpStatus.CREATED);
         }
+    }
+
+    @RequestMapping(value = "v1/recipie/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Recipie> getRecipe(@PathVariable("id") String id) {
+        //System.out.println(recipeId);
+        UUID recipeId = UUID.fromString(id);
+        Recipie recipe = recipieService.getRecipe(recipeId);
+        if (null!=recipe) {
+            return new ResponseEntity<Recipie>(recipe, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = "/v1/recipie/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteRecipe(@PathVariable("id") UUID recipeId, @RequestHeader("Authorization") String token) throws UnsupportedEncodingException {
+        String userDetails[] = decryptAuthenticationToken(token);
+        Recipie existingRecipie = recipieService.getRecipe(recipeId);
+        if(null != existingRecipie){
+            if(existingRecipie.getUser().getEmailId().equalsIgnoreCase(userDetails[0])) {
+                recipieService.deleteRecipe(recipeId);
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     public String[] decryptAuthenticationToken(String token) throws UnsupportedEncodingException {

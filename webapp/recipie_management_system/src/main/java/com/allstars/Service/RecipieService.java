@@ -5,11 +5,13 @@ import com.allstars.Dao.Userdao;
 import com.allstars.Entity.Recipie;
 import com.allstars.Entity.User;
 import com.allstars.errors.RecipieCreationStatus;
-import com.allstars.errors.RegistrationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class RecipieService {
@@ -43,4 +45,16 @@ public class RecipieService {
         RecipieCreationStatus recipieCreationStatus= new RecipieCreationStatus(cookTimeErrorMessage, prepTimeErrorMessage,titleErrorMessage , cuisineErrorMessage);
         return recipieCreationStatus;
     }
+
+    public Recipie getRecipe(UUID recipeid) {
+        //if(recipieDao.isRecipiePresent(recipeid)>0) {
+            return recipieDao.findByRecipeid(recipeid);
+        //}
+       // return null;
+    }
+
+    public void deleteRecipe(UUID recipeId) {
+        recipieDao.deleteById(recipeId);
+    }
+
 }

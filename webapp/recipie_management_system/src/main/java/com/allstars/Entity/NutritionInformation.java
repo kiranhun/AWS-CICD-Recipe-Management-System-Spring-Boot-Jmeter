@@ -26,8 +26,8 @@ public class NutritionInformation {
     @Column(nullable=false)
     private float protein_in_grams;
 
-    @OneToOne(mappedBy = "nutritionInformation")
-    private Recipie recipie;
+   /* @OneToOne(mappedBy = "nutritionInformation")
+    private Recipie recipie;*/
 
     public NutritionInformation(int calories, float cholesterol_in_mg, int sodium_in_mg, float carbohydrates_in_grams, float protein_in_grams, Recipie recipie) {
         this.calories = calories;
@@ -35,7 +35,7 @@ public class NutritionInformation {
         this.sodium_in_mg = sodium_in_mg;
         this.carbohydrates_in_grams = carbohydrates_in_grams;
         this.protein_in_grams = protein_in_grams;
-        this.recipie = recipie;
+        //this.recipie = recipie;
     }
 
     public NutritionInformation() {
@@ -89,11 +89,11 @@ public class NutritionInformation {
         this.protein_in_grams = protein_in_grams;
     }
 
-    public Recipie getRecipie() {
+    /*public Recipie getRecipie() {
         return recipie;
     }
 
     public void setRecipie(Recipie recipie) {
         this.recipie = recipie;
-    }
+    }*/
 }
