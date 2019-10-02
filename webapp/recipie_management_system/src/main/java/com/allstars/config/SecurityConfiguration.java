@@ -39,7 +39,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             http.httpBasic().authenticationEntryPoint(basicAuthenticationEntryPoint).and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-            http.authorizeRequests().antMatchers(HttpMethod.POST).permitAll();
+            http.authorizeRequests().antMatchers(HttpMethod.POST, "v1/user").permitAll();
+            http.authorizeRequests().antMatchers(HttpMethod.GET, "v1/recipie/{id}").permitAll();
             http.authorizeRequests()
                     .antMatchers(HttpMethod.GET, "v1/user/self").fullyAuthenticated()
                     .anyRequest().permitAll();

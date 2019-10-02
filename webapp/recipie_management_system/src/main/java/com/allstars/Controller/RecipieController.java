@@ -31,6 +31,9 @@ public class RecipieController {
     @Autowired
     private RecipieValidator recipieValidator;
 
+    @Autowired
+    private Userdao userdao;
+
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(recipieValidator);
@@ -38,7 +41,7 @@ public class RecipieController {
 
     @RequestMapping(value = "v1/recipie", method = RequestMethod.POST)
     public ResponseEntity<?> createRecipie(@RequestHeader("Authorization") String token, @Valid @RequestBody Recipie recipie, BindingResult errors,
-                                                 HttpServletResponse response) throws Exception{
+                                           HttpServletResponse response) throws Exception{
         RecipieCreationStatus recipieCreationStatus;
 
         if(errors.hasErrors()){
@@ -47,8 +50,8 @@ public class RecipieController {
                     recipieCreationStatus);
         }else {
             String[] authDetails = decryptAuthenticationToken(token);
-
-            Recipie newrecipie = recipieService.SaveRecipie(recipie, authDetails[0]);
+            User user = userdao.findByEmailId(authDetails[0]);
+            Recipie newrecipie = recipieService.SaveRecipie(recipie, user);
             return new ResponseEntity<Recipie>(newrecipie, HttpStatus.CREATED);
         }
     }
@@ -76,6 +79,25 @@ public class RecipieController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @RequestMapping(value = "v1/recipie/{recipieid}", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateRecipie(@PathVariable("recipieid") String id, @RequestHeader("Authorization") String token, @Valid  @RequestBody Recipie recipie, BindingResult errors,
+                                                HttpServletResponse response) throws UnsupportedEncodingException {
+
+        RecipieCreationStatus recipieCreationStatus;
+
+        if(errors.hasErrors()){
+            recipieCreationStatus = recipieService.getRecipieCreationStatus(errors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    recipieCreationStatus);
+        }else {
+            String[] authDetails = decryptAuthenticationToken(token);
+            String userEmailID = authDetails[0];
+            UUID t_id = UUID.fromString(id);
+            return recipieService.updateRecipie(t_id,userEmailID,recipie);
+        }
+
     }
 
     public String[] decryptAuthenticationToken(String token) throws UnsupportedEncodingException {

@@ -64,11 +64,11 @@ public class Recipie {
     private NutritionInformation nutritionInformation;
 
     public Recipie(Date created_ts, Date updated_ts, int cook_time_in_min, int prep_time_in_min, int total_time_in_min, String title, String cuisine, @Range(min = 1, max = 5) String servings, List<String> ingredients, Set<OrderedList> steps, NutritionInformation nutritionInformation) {
-        this.created_ts = created_ts;
+        //this.created_ts = created_ts;
         this.updated_ts = updated_ts;
         this.cook_time_in_min = cook_time_in_min;
         this.prep_time_in_min = prep_time_in_min;
-        this.total_time_in_min = total_time_in_min;
+        //this.total_time_in_min = total_time_in_min;
         this.title = title;
         this.cuisine = cuisine;
         this.servings = servings;
@@ -108,10 +108,8 @@ public class Recipie {
         return created_ts;
     }
 
-    public void setCreated_ts() {
-
-            this.created_ts = new Date();
-
+    public void setCreated_ts(Date created_ts) {
+        this.created_ts = created_ts;
     }
 
     public Date getUpdated_ts() {
