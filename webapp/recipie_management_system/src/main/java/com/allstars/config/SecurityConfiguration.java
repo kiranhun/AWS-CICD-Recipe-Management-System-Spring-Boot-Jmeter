@@ -32,23 +32,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
 
-        http.httpBasic().authenticationEntryPoint(basicAuthenticationEntryPoint).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        try {
+            http.csrf().disable();
 
-        http.authorizeRequests().antMatchers(HttpMethod.POST).permitAll();
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.GET,"v1/user/self").fullyAuthenticated()
-                .anyRequest().permitAll();
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.PUT,"v1/user/self").fullyAuthenticated()
-                .anyRequest().permitAll();
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST,"v1/recipie/").fullyAuthenticated()
-                .anyRequest().permitAll();
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.DELETE, "/v1/recipie/{id}").fullyAuthenticated()
-                .anyRequest().permitAll();
+            http.httpBasic().authenticationEntryPoint(basicAuthenticationEntryPoint).and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+            http.authorizeRequests().antMatchers(HttpMethod.POST).permitAll();
+            http.authorizeRequests()
+                    .antMatchers(HttpMethod.GET, "v1/user/self").fullyAuthenticated()
+                    .anyRequest().permitAll();
+            http.authorizeRequests()
+                    .antMatchers(HttpMethod.PUT, "v1/user/self").fullyAuthenticated()
+                    .anyRequest().permitAll();
+            http.authorizeRequests()
+                    .antMatchers(HttpMethod.POST, "v1/recipie/").fullyAuthenticated()
+                    .anyRequest().permitAll();
+            http.authorizeRequests()
+                    .antMatchers(HttpMethod.DELETE, "/v1/recipie/{id}").fullyAuthenticated()
+                    .anyRequest().permitAll();
+        } catch(Exception exc) {
+
+        }
     }
 }

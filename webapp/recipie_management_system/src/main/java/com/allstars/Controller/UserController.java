@@ -56,31 +56,47 @@ public class UserController {
 
     @RequestMapping(value="v1/user/self" ,method = RequestMethod.GET)
     public ResponseEntity<User> getUser(@RequestHeader("Authorization") String token, HttpServletRequest request) throws UnsupportedEncodingException {
-        
-       String userDetails[] = decryptAuthenticationToken(token);
-        
-        if(!(userService.isEmailPresent(userDetails[0])))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userDetails[0]));
+       try {
+           if(token == null){
+               return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+           }
+           String userDetails[] = decryptAuthenticationToken(token);
+
+           if (!(userService.isEmailPresent(userDetails[0])))
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+           else
+               return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userDetails[0]));
+       }catch(Exception e){
+           return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+       }
     }
 
     @RequestMapping(value = "v1/user/self", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String Header, @Valid @RequestBody User user, BindingResult errors,
+    public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String header, @Valid @RequestBody User user, BindingResult errors,
                                              HttpServletResponse response) throws UnsupportedEncodingException {
+        try {
+            if(header == null){
+                return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+            String[] userDetails = decryptAuthenticationToken(header);
 
-        String[] userDetails =  decryptAuthenticationToken(Header);
-
-        if(userService.updateUserInfo(user, userDetails[0], userDetails[1])){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
-        }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+            if (userService.updateUserInfo(user, userDetails[0], userDetails[1])) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+            }
+        } catch(Exception e) {
+           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
     
-    public String[] decryptAuthenticationToken(String token) throws UnsupportedEncodingException {
-        String[] basicAuthToken = token.split(" ");
-        byte[] authKeys = Base64.getDecoder().decode(basicAuthToken[1]);
-        return new String(authKeys,"utf-8").split(":");
+    public String[] decryptAuthenticationToken(String token) throws Exception {
+        try {
+            String[] basicAuthToken = token.split(" ");
+            byte[] authKeys = Base64.getDecoder().decode(basicAuthToken[1]);
+            return new String(authKeys, "utf-8").split(":");
+        } catch(Exception e) {
+            throw new Exception("Unauthorized");
+        }
     }
 }
