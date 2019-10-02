@@ -33,10 +33,10 @@ public class Recipie {
     private UUID author_id;
 
     @Column
-    private int cook_time_in_min;
+    private Integer cook_time_in_min;
 
     @Column
-    private int prep_time_in_min;
+    private Integer prep_time_in_min;
 
     @Column
     private int total_time_in_min;
@@ -48,8 +48,7 @@ public class Recipie {
     private String cuisine;
 
     @Column
-    @Range(min=1, max=5)
-    private String servings;
+    private Integer servings;
 
     @Column
     @ElementCollection
@@ -63,7 +62,7 @@ public class Recipie {
     @JoinColumn(unique = true)
     private NutritionInformation nutritionInformation;
 
-    public Recipie(Date created_ts, Date updated_ts, int cook_time_in_min, int prep_time_in_min, int total_time_in_min, String title, String cuisine, @Range(min = 1, max = 5) String servings, List<String> ingredients, Set<OrderedList> steps, NutritionInformation nutritionInformation) {
+    public Recipie(Date created_ts, Date updated_ts, Integer cook_time_in_min, Integer prep_time_in_min, int total_time_in_min, String title, String cuisine, Integer servings, List<String> ingredients, Set<OrderedList> steps, NutritionInformation nutritionInformation) {
         //this.created_ts = created_ts;
         this.updated_ts = updated_ts;
         this.cook_time_in_min = cook_time_in_min;
@@ -122,19 +121,19 @@ public class Recipie {
 
     }
 
-    public int getCook_time_in_min() {
+    public Integer getCook_time_in_min() {
         return cook_time_in_min;
     }
 
-    public void setCook_time_in_min(int cook_time_in_min) {
+    public void setCook_time_in_min(Integer cook_time_in_min) {
         this.cook_time_in_min = cook_time_in_min;
     }
 
-    public int getPrep_time_in_min() {
+    public Integer getPrep_time_in_min() {
         return prep_time_in_min;
     }
 
-    public void setPrep_time_in_min(int prep_time_in_min) {
+    public void setPrep_time_in_min(Integer prep_time_in_min) {
         this.prep_time_in_min = prep_time_in_min;
     }
 
@@ -162,11 +161,11 @@ public class Recipie {
         this.cuisine = cuisine;
     }
 
-    public String getServings() {
+    public Integer getServings() {
         return servings;
     }
 
-    public void setServings(String servings) {
+    public void setServings(Integer servings) {
         this.servings = servings;
     }
 

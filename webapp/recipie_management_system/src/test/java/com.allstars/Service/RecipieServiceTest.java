@@ -27,7 +27,7 @@ public class RecipieServiceTest {
     private static Recipie recipie;
     private static Set<OrderedList> steps;
     private static OrderedList oList;
-    private  static NutritionInformation nInfo;
+    private static NutritionInformation nInfo;
     private static User user;
 
     @Before
@@ -36,8 +36,8 @@ public class RecipieServiceTest {
         this.steps = new HashSet<>();
         this.oList = new OrderedList(1,"first");
         steps.add(oList);
-        this.nInfo = new NutritionInformation(10,2,3,4,5);
-        this.recipie = new Recipie(new Date(),new Date(),15,5,20,"samosa","indian",String.valueOf(1),ingredients,steps,nInfo);
+        this.nInfo = new NutritionInformation(Integer.valueOf(2),Float.valueOf(1),Integer.valueOf(3),Float.valueOf(4),Float.valueOf(5));
+        this.recipie = new Recipie(new Date(),new Date(),15,5,20,"samosa","indian",1,ingredients,steps,nInfo);
         this.user = new User(UUID.randomUUID(),"ravi","kiran","kiranhun@gmail.com","WonderFul@28",new Date(),new Date());
     }
 

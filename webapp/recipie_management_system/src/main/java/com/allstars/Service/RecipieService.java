@@ -41,11 +41,20 @@ public class RecipieService {
         FieldError prepTimeError = errors.getFieldError("prep_time_in_min");
         FieldError titleError = errors.getFieldError("title");
         FieldError cuisineError = errors.getFieldError("cuisine");
+        FieldError ingredientsError = errors.getFieldError("ingredients");
+        FieldError stepsError = errors.getFieldError("steps");
+        FieldError nutritionInformationError = errors.getFieldError("nutritionInformation");
+        FieldError servingsError = errors.getFieldError("servings");
+
         String cookTimeErrorMessage = cookTimeError == null ? "-" : cookTimeError.getCode();
         String prepTimeErrorMessage = prepTimeError == null ? "-" : prepTimeError.getCode();
         String titleErrorMessage = titleError == null ? "-" : titleError.getCode();
         String cuisineErrorMessage = cuisineError == null ? "-" : cuisineError.getCode();
-        RecipieCreationStatus recipieCreationStatus= new RecipieCreationStatus(cookTimeErrorMessage, prepTimeErrorMessage,titleErrorMessage , cuisineErrorMessage);
+        String ingredientsErrorMessage = ingredientsError == null ? "-" : ingredientsError.getCode();
+        String stepsErrorMessage = stepsError == null ? "-" : stepsError.getCode();
+        String nutritionInformationErrorMessage = nutritionInformationError == null ? "-" : nutritionInformationError.getCode();
+        String servingsErrorMessage = servingsError == null ? "-" : servingsError.getCode();
+        RecipieCreationStatus recipieCreationStatus= new RecipieCreationStatus(cookTimeErrorMessage, prepTimeErrorMessage,titleErrorMessage , cuisineErrorMessage, servingsErrorMessage, ingredientsErrorMessage, stepsErrorMessage, nutritionInformationErrorMessage);
         return recipieCreationStatus;
     }
 
