@@ -13,7 +13,7 @@
 
 The Recipe Management Web application is developed using Java Spring Boot framework that uses the REST architecture to create,
 update and retrieve user and Spring Security to secure GET & PUT calls.
-
+A user can create a recipe, delete & update only authored recipes. Anyone can fetch a recipe
 ## Build Instructions
 
 Pre-req : Need POSTMAN and MariaDB installed.
@@ -54,10 +54,33 @@ Pre-req : Need POSTMAN and MariaDB installed.
         - Use v1/user/self & set Authentication to Basic Auth
         - Success : 204 NO CONTENT
         - Failure : 400 BAD REQUEST
+     
+    * To Create Recipe
+        - /v1/recipie/ & set Authentication to Basic Auth
+        - Success : 201 CREATED
+        - Failure : 400 BAD REQUEST
+    
+    * To Get Recipe
+        - v1/recipie/{id} & No Auth
+        - Success : 200 OK
+        - Failure : 404 NOT FOUND
+     
+     * To Update Recipe
+        - v1/recipie/{id} & set Authentication to Basic Auth
+        - Success : 200 OK 
+        - Failure : 400 BAD REQUEST
+                  : 401 UNAUTHORIZED
+                  : 404 NOT FOUND
+     
+     * To Delete Recipe
+        - v1/recipie/{id} & set Authentication to Basic Auth
+        - Success : 204 NO CONTENT
+        - Failure : 401 UNAUTHORIZED
+                  : 404 NOT FOUND
             
 ## Running Tests
 
-    * Implemented Junit using Mockito for unit testing for creation of user.
+    * Implemented Junit using Mockito for unit testing for creation of user & create recipe
     * Run Application using "Run All Tests"
 
 ## CI/CD
