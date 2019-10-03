@@ -2,11 +2,9 @@ package com.allstars.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -29,6 +27,7 @@ public class User {
     @Column
     private Date uTime;
 
+
     public User(UUID uuid, String fName, String lName, String emailId, String password, Date cTime, Date uTime) {
         this.fName = fName;
         this.lName = lName;
@@ -40,6 +39,8 @@ public class User {
     {
 
     }
+
+
 
     public UUID getUuid() {
         return uuid;

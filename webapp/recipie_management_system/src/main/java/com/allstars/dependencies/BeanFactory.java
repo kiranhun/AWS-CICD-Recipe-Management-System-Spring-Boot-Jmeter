@@ -1,5 +1,6 @@
 package com.allstars.dependencies;
 
+import com.allstars.validators.RecipieValidator;
 import com.allstars.validators.UserValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,11 @@ public class BeanFactory {
     }
 
     @Bean
+    public RecipieValidator recipieValidator(){
+        return new RecipieValidator();
+    }
+
+    @Bean
     public BasicAuthenticationEntryPoint basicAuthenticationEntryPoint(){
         return new BasicAuthenticationEntryPoint() {
             @Override
@@ -39,7 +45,7 @@ public class BeanFactory {
                                  AuthenticationException authException) throws IOException {
                 response.addHeader("WWW-Authenticate", "Basic realm = "+getRealmName());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().println("Access denied");
+                response.getWriter().println("");
             }
         };
     }
