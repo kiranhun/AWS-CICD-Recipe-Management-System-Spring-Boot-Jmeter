@@ -89,7 +89,7 @@ public class RecipieService {
                 return ResponseEntity.status(HttpStatus.OK).body("");
             }
             else{
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
             }
         }
     }
