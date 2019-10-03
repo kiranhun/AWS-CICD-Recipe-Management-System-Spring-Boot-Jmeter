@@ -1,6 +1,7 @@
 package com.allstars.validators;
 
 import com.allstars.Entity.Recipie;
+import com.allstars.Entity.OrderedList;
 import com.allstars.Entity.User;
 import com.allstars.Service.RecipieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,12 @@ public class RecipieValidator implements Validator {
 
         if(recipie.getPrep_time_in_min() == 0){
             errors.rejectValue("prep_time_in_min", "Prep time cannot be 0");
+        }
+
+        for(OrderedList ol : recipie.getSteps()){
+            if(ol.getPosition() == null || ol.getPosition() < 1){
+                errors.rejectValue("steps", "Position in steps cannot be null and has to be >= 1 ");
+            }
         }
 
         if(!((recipie.getServings() >=1) && (recipie.getServings() <= 5)) ){

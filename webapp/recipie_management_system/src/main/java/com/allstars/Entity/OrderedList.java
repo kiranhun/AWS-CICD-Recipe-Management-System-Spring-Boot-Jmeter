@@ -11,7 +11,7 @@ public class OrderedList {
     private UUID OListID;
 
     @Column
-    private int position;
+    private Integer position;
 
     @Column
     private String items;
@@ -34,11 +34,11 @@ public class OrderedList {
         this.OListID = OListID;
     }
 
-    public int getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 
