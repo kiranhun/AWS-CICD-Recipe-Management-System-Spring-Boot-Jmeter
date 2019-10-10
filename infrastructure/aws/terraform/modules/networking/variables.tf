@@ -39,3 +39,7 @@ variable "subnet3" {
 variable "destinationCIDRblock" {
    default = "0.0.0.0/0"
 }
+
+variable "region" {
+  type= string
+}

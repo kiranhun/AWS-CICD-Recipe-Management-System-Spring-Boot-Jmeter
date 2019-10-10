@@ -6,4 +6,5 @@ module "vpc_endpoint" {
     subnet2 = var.subnetcidr2
     subnet3 = var.subnetcidr3
     vpccidr = var.cidr_range
+    region = var.region
 }
