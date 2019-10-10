@@ -11,18 +11,24 @@
 
 ## Technology Stack
 
-The Recipe Management Web application is developed using Java Spring Boot framework that uses the REST architecture to create,
-update and retrieve user and Spring Security to secure GET & PUT calls.
+The Recipe Management Web application is developed using Java Spring Boot framework that uses the REST architecture 
+to create, update and retrieve user
+Spring Security using Base64 authentication to secure retrieve user information and update user information
+Spring Security using Base64 authentication to create recipe and update recipe
 A user can create a recipe, delete & update only authored recipes. Anyone can fetch a recipe
-## Build Instructions
 
-Pre-req : Need POSTMAN and MariaDB installed.
-    * Clone repository git@github.com:VeenaIyer-17/ccwebapp.git using SSH key.
+## Build Instructions
+Pre-req : Need tool to run REST endpoints like POSTMAN, MariaDB & IDE
+    * Clone repository git@github.com:VeenaIyer-17/ccwebapp.git using SSH key
     * Import Maven Dependencies
+    * Setup database connection by setting the datasource url, username & password
+    * Create database named test
+    * Test connection
     * Run application by traversing to ccwebapp/webapp/recipie_management_system/src/main/java/com/allstars/main.java
+    * Console should state the application has started
 
 ## Deploy Instructions
-    * Open POSTMAN
+    * To hit the end points of the REST API use any REST tool like POSTMAN
     * To Create User -
         - Use v1/user & No Authentication
         - Success : 200 OK
