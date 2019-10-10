@@ -68,7 +68,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Boolean updateUserInfo(User newUser, String emailId, String Password){
-        if (newUser.getEmailId()!=null || newUser.getcTime()!=null || newUser.getuTime()!=null || newUser.getUuid()!=null){
+        if (newUser.getEmailId()!=null || newUser.getAccount_created()!=null || newUser.getAccount_updated()!=null || newUser.getUuid()!=null){
             return false;
         }
         else{
@@ -84,10 +84,10 @@ public class UserService implements UserDetailsService {
                             new WhitespaceRule()));
                     RuleResult result = validator.validate(new PasswordData(newUser.getPassword()));
                     if(result.isValid()) {
-                        currUser.setfName(newUser.getfName());
-                        currUser.setlName(newUser.getlName());
+                        currUser.setFirst_name(newUser.getFirst_name());
+                        currUser.setLast_name(newUser.getLast_name());
                         currUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-                        currUser.setuTime(new Date());
+                        currUser.setAccount_updated(new Date());
                         userDao.save(currUser);
                         return true;
                     }

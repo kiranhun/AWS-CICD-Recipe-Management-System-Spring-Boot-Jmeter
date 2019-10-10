@@ -1,15 +1,21 @@
 package com.allstars.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties(value={"NuInfoID"}, allowSetters= true)
 public class NutritionInformation {
 
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "uuid", columnDefinition = "CHAR(32)")
     @Id
-    @GeneratedValue
-    @Column(name = "uuid", columnDefinition = "BINARY(16)")
-    private UUID NuInfoID;
+    private String NuInfoID;
 
     @Column(nullable=false)
     private Integer calories;
@@ -38,11 +44,11 @@ public class NutritionInformation {
     public NutritionInformation() {
     }
 
-    public UUID getNuInfoID() {
+    public String getNuInfoID() {
         return NuInfoID;
     }
 
-    public void setNuInfoID(UUID nuInfoID) {
+    public void setNuInfoID(String nuInfoID) {
         NuInfoID = nuInfoID;
     }
 
