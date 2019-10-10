@@ -8,9 +8,13 @@ subNetCidrBlock1=$4
 subNetCidrBlock2=$5
 subNetCidrBlock3=$6
 
+if [ "$#" -ne 6 ]; then
+    echo "Illegal number of parameters"
+    exit
+fi
 
 #Create vpc
-vpcDetails=$(aws ec2 create-vpc --cidr-block "$vpcCidrBlock" --region "$awsRegion" --output json 2>/dev/null)
+vpcDetails=$(aws ec2 create-vpc --cidr-block "$vpcCidrBlock" --region "$awsRegion" --output json)
 if [ $? -ne 0 ]
 then
     echo "Failure: VPC creation failed"
@@ -19,6 +23,8 @@ fi
 
 #Add tag to vpc
 vpcId=$(echo -e "$vpcDetails" |  /usr/bin/jq '.Vpc.VpcId' | tr -d '"')
+echo "$vpcId created...creating subnets"
+
 aws ec2 create-tags --resources "$vpcId" --tags Key=Name,Value="$vpcName" --region "$awsRegion"
 
 #Create subnet#1
@@ -29,6 +35,8 @@ then
     exit
 fi
 subnetId1=$(echo -e "$subnetDetails1" |  /usr/bin/jq '.Subnet.SubnetId' | tr -d '"')
+echo "$subnetId1 created"
+
 aws ec2 create-tags  --resources "$subnetId1"  --tags Key=Name,Value="firstSubnet" --region "$awsRegion"
 
 subnetDetails2=$(aws ec2 create-subnet  --cidr-block "$subNetCidrBlock2" --region "$awsRegion" --availability-zone "${awsRegion}b"  --vpc-id "$vpcId"  --output json)
@@ -38,6 +46,8 @@ then
     exit
 fi
 subnetId2=$(echo -e "$subnetDetails2" |  /usr/bin/jq '.Subnet.SubnetId' | tr -d '"')
+echo "$subnetId2 created"
+
 aws ec2 create-tags  --resources "$subnetId2"  --tags Key=Name,Value="secondSubnet" --region "$awsRegion"
 
 subnetDetails3=$(aws ec2 create-subnet  --cidr-block "$subNetCidrBlock3" --region "$awsRegion" --availability-zone "${awsRegion}c"  --vpc-id "$vpcId"  --output json)
@@ -47,6 +57,8 @@ then
     exit
 fi
 subnetId3=$(echo -e "$subnetDetails3" |  /usr/bin/jq '.Subnet.SubnetId' | tr -d '"')
+echo "$subnetId3 created"
+
 aws ec2 create-tags  --resources "$subnetId3"  --tags Key=Name,Value="thirdSubnet" --region "$awsRegion"
 
 #Create Gateway
@@ -73,25 +85,31 @@ fi
 routeTableId=$(echo -e "$routeTableDetails" |  /usr/bin/jq '.RouteTable.RouteTableId' | tr -d '"')
 aws ec2 create-tags --resources "$routeTableId" --tags Key=Name,Value="$vpcName" --region "$awsRegion"
 
-aws ec2 associate-route-table --subnet-id "$subnetId1" --route-table-id "$routeTableId" --region "$awsRegion"
+aws ec2 associate-route-table --subnet-id "$subnetId1" --route-table-id "$routeTableId" --region "$awsRegion" &> /dev/null
 if [ $? -ne 0 ]
 then
-    echo "Failure: Route table association with subnet#1 failed"
+    echo "Failure: Route table association with  $subnetId1 failed"
     exit
+else
+    echo "Route table $routeTableId associated with $subnetId1"
 fi
-aws ec2 associate-route-table --subnet-id "$subnetId2" --route-table-id "$routeTableId" --region "$awsRegion"
+aws ec2 associate-route-table --subnet-id "$subnetId2" --route-table-id "$routeTableId" --region "$awsRegion" &> /dev/null
 if [ $? -ne 0 ]
 then
-    echo "Failure: Route table association with subnet#2 failed"
+    echo "Failure: Route table association with $subnetId2 failed"
     exit
+else
+    echo "Route table $routeTableId associated with $subnetId2"
 fi
-aws ec2 associate-route-table --subnet-id "$subnetId3" --route-table-id "$routeTableId" --region "$awsRegion"
+aws ec2 associate-route-table --subnet-id "$subnetId3" --route-table-id "$routeTableId" --region "$awsRegion" &> /dev/null
 if [ $? -ne 0 ]
 then
-    echo "Failure: Route table association with subnet#3 failed"
+    echo "Failure: Route table association with $subnetId3 failed"
     exit
+else
+    echo "Route table $routeTableId associated with $subnetId3"
 fi
-aws ec2 create-route --route-table-id "$routeTableId" --destination-cidr-block 0.0.0.0/0 --gateway-id "$gatewayId" --region "$awsRegion"
+aws ec2 create-route --route-table-id "$routeTableId" --destination-cidr-block 0.0.0.0/0 --gateway-id "$gatewayId" --region "$awsRegion" &> /dev/null
 if [ $? -ne 0 ]
 then
     echo "Failure: Adding 0.0.0.0/0 cidr failed"
