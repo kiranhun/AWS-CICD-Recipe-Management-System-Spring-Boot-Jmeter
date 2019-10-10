@@ -1,14 +1,21 @@
 package com.allstars.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties(value={"OListID"}, allowSetters= true)
 public class OrderedList {
+
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "OListID", columnDefinition = "CHAR(32)")
     @Id
-    @GeneratedValue
-    @Column(name = "OListID", columnDefinition = "BINARY(16)")
-    private UUID OListID;
+    private String OListID;
 
     @Column
     private Integer position;
@@ -26,11 +33,11 @@ public class OrderedList {
     public OrderedList() {
     }
 
-    public UUID getOListID() {
+    public String getOListID() {
         return OListID;
     }
 
-    public void setOListID(UUID OListID) {
+    public void setOListID(String OListID) {
         this.OListID = OListID;
     }
 
