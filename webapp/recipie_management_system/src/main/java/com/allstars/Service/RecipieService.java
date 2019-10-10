@@ -58,18 +58,18 @@ public class RecipieService {
         return recipieCreationStatus;
     }
 
-    public Recipie getRecipe(UUID recipeid) {
+    public Recipie getRecipe(String recipeid) {
         //if(recipieDao.isRecipiePresent(recipeid)>0) {
             return recipieDao.findByRecipeid(recipeid);
         //}
        // return null;
     }
 
-    public void deleteRecipe(UUID recipeId) {
+    public void deleteRecipe(String recipeId) {
         recipieDao.deleteById(recipeId);
     }
 
-    public ResponseEntity<String> updateRecipie(UUID id, String userEmailId, Recipie recipie){
+    public ResponseEntity<?> updateRecipie(String id, String userEmailId, Recipie recipie){
 
         Recipie retrivedRecipie = recipieDao.findByRecipeid(id);
 
@@ -86,7 +86,7 @@ public class RecipieService {
                 recipie.setUpdated_ts();
                 recipie.setTotal_time_in_min();
                 recipieDao.save(recipie);
-                return ResponseEntity.status(HttpStatus.OK).body("");
+                return new ResponseEntity<Recipie>(recipie, HttpStatus.CREATED);
             }
             else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");

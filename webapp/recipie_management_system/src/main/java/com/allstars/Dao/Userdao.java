@@ -10,7 +10,7 @@ import java.util.UUID;
 
 
 @Repository
-public interface Userdao extends CrudRepository<User, UUID> {
+public interface Userdao extends CrudRepository<User, String> {
     User findByEmailId(String emailId);
 
     @Query("SELECT count(emailId) FROM User WHERE emailId=:emailId")

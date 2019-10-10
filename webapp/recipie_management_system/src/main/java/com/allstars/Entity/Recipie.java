@@ -2,8 +2,10 @@ package com.allstars.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.jpa.repository.Temporal;
 
@@ -14,10 +16,12 @@ import java.util.*;
 @Entity
 @JsonIgnoreProperties(value={"user"}, allowSetters= true)
 public class Recipie {
+
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "recipeid" ,columnDefinition = "CHAR(32)")
     @Id
-    @GeneratedValue
-    @Column(name = "recipeid", columnDefinition = "BINARY(16)")
-    private UUID recipeid;
+    private String recipeid;
 
     @Column
     private Date created_ts;
@@ -26,11 +30,11 @@ public class Recipie {
     private Date updated_ts;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="uuid", nullable = true)
+    @JoinColumn(name="userid", nullable = true)
     private User user;
 
     @Column
-    private UUID author_id;
+    private String author_id;
 
     @Column
     private Integer cook_time_in_min;
@@ -55,11 +59,11 @@ public class Recipie {
     private List<String> ingredients;
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    @JoinColumn(name="join_id")
+    @JoinColumn(name="recipie_id")
     private Set<OrderedList> steps;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(unique = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="NIid")
     private NutritionInformation nutritionInformation;
 
     public Recipie(Date created_ts, Date updated_ts, Integer cook_time_in_min, Integer prep_time_in_min, int total_time_in_min, String title, String cuisine, Integer servings, List<String> ingredients, Set<OrderedList> steps, NutritionInformation nutritionInformation) {
@@ -87,19 +91,19 @@ public class Recipie {
         this.user = user;
     }
 
-    public UUID getAuthor_id() {
+    public String getAuthor_id() {
         return author_id;
     }
 
-    public void setAuthor_id(UUID author_id) {
+    public void setAuthor_id(String author_id) {
         this.author_id = author_id;
     }
 
-    public UUID getRecipeId() {
+    public String getRecipeId() {
         return recipeid;
     }
 
-    public void setRecipeId(UUID recipeId) {
+    public void setRecipeId(String recipeId) {
         this.recipeid = recipeId;
     }
 

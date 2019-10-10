@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface RecipieDao extends CrudRepository<Recipie, UUID> {
+public interface RecipieDao extends CrudRepository<Recipie, String> {
 
-    Recipie findByRecipeid(UUID id);
+    Recipie findByRecipeid(String id);
 
     //Recipie findByRecipeId(UUID recipeid);
 
