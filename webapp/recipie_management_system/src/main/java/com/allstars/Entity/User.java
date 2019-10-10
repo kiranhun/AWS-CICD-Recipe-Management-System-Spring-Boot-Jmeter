@@ -29,7 +29,7 @@ public class User {
     private Date account_updated;
 
 
-    public User(UUID uuid, String first_name, String last_name, String emailId, String password, Date account_created, Date account_updated) {
+    public User(String uuid, String first_name, String last_name, String emailId, String password, Date account_created, Date account_updated) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.emailId = emailId;

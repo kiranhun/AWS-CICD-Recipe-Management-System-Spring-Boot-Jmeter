@@ -1,6 +1,8 @@
 package com.allstars.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -44,10 +46,12 @@ public class NutritionInformation {
     public NutritionInformation() {
     }
 
+    @JsonIgnore
     public String getNuInfoID() {
         return NuInfoID;
     }
 
+    @JsonProperty("id")
     public void setNuInfoID(String nuInfoID) {
         NuInfoID = nuInfoID;
     }

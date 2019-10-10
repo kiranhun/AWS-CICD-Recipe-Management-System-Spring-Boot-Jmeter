@@ -1,6 +1,8 @@
 package com.allstars.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -33,10 +35,12 @@ public class OrderedList {
     public OrderedList() {
     }
 
+    @JsonIgnore
     public String getOListID() {
         return OListID;
     }
 
+    @JsonProperty("orderID")
     public void setOListID(String OListID) {
         this.OListID = OListID;
     }

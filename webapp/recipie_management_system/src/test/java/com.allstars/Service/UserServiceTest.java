@@ -27,7 +27,7 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        this.user = new User(UUID.randomUUID(),"ravi","kiran","kiranhun@gmail.com","WonderFul@28",new Date(),new Date());
+        this.user = new User("stringID1234","ravi","kiran","kiranhun@gmail.com","WonderFul@28",new Date(),new Date());
     }
 
     @Test
