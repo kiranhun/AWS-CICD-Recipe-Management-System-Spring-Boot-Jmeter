@@ -59,8 +59,8 @@ public class RecipieController {
     @RequestMapping(value = "v1/recipie/{id}", method = RequestMethod.GET)
     public ResponseEntity<Recipie> getRecipe(@PathVariable("id") String id) {
         //System.out.println(recipeId);
-        UUID recipeId = UUID.fromString(id);
-        Recipie recipe = recipieService.getRecipe(recipeId);
+        //UUID recipeId = UUID.fromString(id);
+        Recipie recipe = recipieService.getRecipe(id);
         if (null!=recipe) {
             return new ResponseEntity<Recipie>(recipe, HttpStatus.OK);
         }
@@ -68,7 +68,7 @@ public class RecipieController {
     }
 
     @RequestMapping(value = "/v1/recipie/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteRecipe(@PathVariable("id") UUID recipeId, @RequestHeader("Authorization") String token) throws UnsupportedEncodingException {
+    public ResponseEntity deleteRecipe(@PathVariable("id") String recipeId, @RequestHeader("Authorization") String token) throws UnsupportedEncodingException {
         String userDetails[] = decryptAuthenticationToken(token);
         Recipie existingRecipie = recipieService.getRecipe(recipeId);
         if(null != existingRecipie){
@@ -94,7 +94,7 @@ public class RecipieController {
         }else {
             String[] authDetails = decryptAuthenticationToken(token);
             String userEmailID = authDetails[0];
-            UUID t_id = UUID.fromString(id);
+            String t_id = id;
             return recipieService.updateRecipie(t_id,userEmailID,recipie);
         }
 

@@ -45,8 +45,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     registrationStatus);
         }else {
-            user.setcTime(new Date());
-            user.setuTime(new Date());
+            user.setAccount_created(new Date());
+            user.setAccount_updated(new Date());
             registrationStatus = new RegistrationStatus();
             User u = userService.saveUser(user);
 

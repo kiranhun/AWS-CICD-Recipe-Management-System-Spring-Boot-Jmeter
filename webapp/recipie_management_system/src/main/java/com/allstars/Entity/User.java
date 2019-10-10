@@ -1,36 +1,37 @@
 package com.allstars.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @JsonIgnoreProperties(value={"password"}, allowSetters= true)
 public class User {
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "userid", columnDefinition = "CHAR(32)")
     @Id
-    @GeneratedValue
-    @Column(name = "uuid", columnDefinition = "BINARY(16)")
-    private UUID uuid;
+    private String uuid;
     @Column
-    private String fName;
+    private String first_name;
     @Column
-    private String lName;
+    private String last_name;
     @Column(unique = true, length = 32)
     private String emailId;
     @Column(nullable=false)
     private String password;
     @Column
-    private Date cTime;
+    private Date account_created;
     @Column
-    private Date uTime;
+    private Date account_updated;
 
 
-    public User(UUID uuid, String fName, String lName, String emailId, String password, Date cTime, Date uTime) {
-        this.fName = fName;
-        this.lName = lName;
+    public User(String uuid, String first_name, String last_name, String emailId, String password, Date account_created, Date account_updated) {
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.emailId = emailId;
         this.password = password;
     }
@@ -42,28 +43,28 @@ public class User {
 
 
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getlName() {
-        return lName;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setlName(String lName) {
-        this.lName = lName;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getEmailId() {
@@ -82,21 +83,21 @@ public class User {
         this.password = password;
     }
 
-    public Date getcTime() {
-        return cTime;
+    public Date getAccount_created() {
+        return account_created;
     }
 
-    public void setcTime(Date cTime) {
-        if (this.cTime == null) {
-            this.cTime = new Date();
+    public void setAccount_created(Date account_created) {
+        if (this.account_created == null) {
+            this.account_created = new Date();
         }
     }
 
-    public Date getuTime() {
-        return uTime;
+    public Date getAccount_updated() {
+        return account_updated;
     }
 
-    public void setuTime(Date uTime) {
-        this.uTime = new Date();
+    public void setAccount_updated(Date account_updated) {
+        this.account_updated = new Date();
     }
 }
