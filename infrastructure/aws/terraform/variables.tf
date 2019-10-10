@@ -23,3 +23,7 @@ variable "subnetcidr2" {
 variable "subnetcidr3" {
   type = "string"
 }
+
+variable "region" {
+  type = "string"
+}
