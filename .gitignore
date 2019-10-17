@@ -111,7 +111,18 @@ venv.bak/
 *.backup
 
 #idea
-.idea
+.idea/
 
 #war
 .war
+
+#jar
+.jar
+
+#class
+.class
+
+#maven
+log/
+target/
+

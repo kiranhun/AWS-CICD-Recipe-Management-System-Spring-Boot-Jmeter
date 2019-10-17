@@ -87,7 +87,7 @@ fi
 
 #Get Route Table details
 
-routeTableDetails=$(aws ec2 describe-route-tables --filters "Name=tag:Name,Values="$vpcName"" --region us-east-2 --output json)
+routeTableDetails=$(aws ec2 describe-route-tables --filters "Name=tag:Name,Values="$vpcName"" --region "$awsRegion" --output json)
 routeTableId=$(echo -e "$routeTableDetails" | /usr/bin/jq '.RouteTables[0].RouteTableId' | tr -d '"')
 
 #Delete 0.0.0.0/0 in Route Table

@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="recipie_management_system" target="11.0" />
+      <module name="recipie_management_system" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
