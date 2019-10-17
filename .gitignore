@@ -107,3 +107,11 @@ venv.bak/
 .terraform
 *.tfstate
 *.tfvars
+*.tfstate.*
+*.backup
+
+#idea
+.idea
+
+#war
+.war
