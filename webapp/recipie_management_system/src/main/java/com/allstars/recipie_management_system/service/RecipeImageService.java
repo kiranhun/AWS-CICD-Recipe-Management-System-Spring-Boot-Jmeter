@@ -26,7 +26,7 @@ public interface RecipeImageService {
     }
 
 
-    public String uploadImage(MultipartFile multipartFile, String emailAddress, String recipeId) throws Exception;
+    public RecipeImage uploadImage(MultipartFile multipartFile, String emailAddress, String recipeId, RecipeImage recipeImage) throws Exception;
     public String deleteImage(RecipeImage recipeImage, String recipeId) throws Exception;
 
 }

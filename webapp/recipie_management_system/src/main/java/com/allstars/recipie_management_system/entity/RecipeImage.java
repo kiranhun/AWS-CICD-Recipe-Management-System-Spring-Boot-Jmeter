@@ -1,5 +1,6 @@
 package com.allstars.recipie_management_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
+@JsonIgnoreProperties(value={"md5Hash"}, allowSetters= true)
 public class RecipeImage {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -17,6 +19,8 @@ public class RecipeImage {
 
     private String url;
 
+    private String md5Hash;
+
     public RecipeImage() {
     }
 
@@ -24,9 +28,18 @@ public class RecipeImage {
         this.url = url;
     }
 
-    public RecipeImage(String imageId, String url) {
+    public RecipeImage(String imageId, String url, String md5Hash) {
         this.imageId = imageId;
         this.url = url;
+        this.md5Hash = md5Hash;
+    }
+
+    public String getMd5Hash() {
+        return md5Hash;
+    }
+
+    public void setMd5Hash(String md5Hash) {
+        this.md5Hash = md5Hash;
     }
 
     public String getImageId() {
