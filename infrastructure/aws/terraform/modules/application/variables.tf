@@ -203,7 +203,6 @@ variable "dynamo_db_name" {
 }
 
 variable "bucket_name" {
-  description = "bucket name."
+  description = "Bucket name."
   type        = string
-  default     = "webapp.amoghdoijode.me"
 }

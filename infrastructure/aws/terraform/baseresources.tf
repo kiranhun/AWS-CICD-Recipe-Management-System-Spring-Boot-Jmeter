@@ -19,4 +19,5 @@ module "ec2_host" {
     security_group_list = [aws_security_group.database.id]
     image_id            = var.image_id
     key_pair            = var.key_pair
+    bucket_name         = var.bucket_name
 }

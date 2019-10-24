@@ -1,6 +1,5 @@
 variable "aws_profile" {
   type = string
-  default = "dev"
 }
 
 variable "vpc_name" {
@@ -27,7 +26,6 @@ variable "subnetcidr3" {
 
 variable "region" {
   type = "string"
-  default = "us-east-1"
 }
 
 variable "image_id" {
@@ -38,4 +36,9 @@ variable "image_id" {
 variable "key_pair" {
   description = "Your aws keypair used to ssh into the machine. Needed if you want to be able to ssh into the created instance."
   default     = "csye6225"
+}
+
+variable "bucket_name" {
+  description = "Bucket name."
+  type        = string
 }
