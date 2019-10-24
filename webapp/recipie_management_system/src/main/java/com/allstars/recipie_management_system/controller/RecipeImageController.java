@@ -68,16 +68,15 @@ public class RecipeImageController {
 
                 RecipeImage recipeImage = new RecipeImage();
                 String photoNewName = image.getOriginalFilename();
-                String filePath = recipeImageService.uploadImage(image, photoNewName,recipie.getRecipeId());
-                recipeImage.setUrl(filePath);
+                recipeImage = recipeImageService.uploadImage(image, photoNewName,recipie.getRecipeId(),recipeImage);
                 recipie.setImage(recipeImage);
                 Recipie rec = recipieDao.save(recipie);
                 RecipeImage recImg = rec.getImage();
-                return ResponseEntity.status(HttpStatus.OK).body(recImg);
+                return ResponseEntity.status(HttpStatus.CREATED).body(recImg);
 
             }
             else{
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
             }
         }
         else {

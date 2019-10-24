@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
@@ -60,7 +61,7 @@ public class RecipeImageAwsService implements RecipeImageService {
     }
 
     @Override
-    public String uploadImage(MultipartFile multipartFile, String fileName, String recipeId) throws Exception {
+    public RecipeImage uploadImage(MultipartFile multipartFile, String fileName, String recipeId, RecipeImage recipeImage) throws Exception {
 
         logger.info(multipartFile.getName());
 
@@ -76,29 +77,16 @@ public class RecipeImageAwsService implements RecipeImageService {
             e.printStackTrace();
         }
 
-//        HashCode hash = com.google.common.io.Files
-//                .hash(new File(name), Hashing.md5());
 
 
-//        byte[] buffer= new byte[8192];
-//        int count;
-//
-//        MessageDigest md = MessageDigest.getInstance("MD5");
-//        BufferedInputStream bis = new BufferedInputStream(inputStream);
-//        DigestInputStream dis = new DigestInputStream(inputStream, md);
-//
-//        while ((count = bis.read(buffer)) > 0) {
-//            md.update(buffer, 0, count);
-//        }
-//        bis.close();
-//
-//        byte[] hash = md.digest();
-
-        s3client.putObject(bucketName, name, multipartFile.getInputStream(), new ObjectMetadata());
+        PutObjectResult data = s3client.putObject(bucketName, name, multipartFile.getInputStream(), new ObjectMetadata());
 
         String fileUrl = endpointUrl + "/" + bucketName + "/" + name;
 
-        return fileUrl;
+        recipeImage.setUrl(fileUrl);
+        recipeImage.setMd5Hash(data.getContentMd5());
+
+        return recipeImage;
 
     }
 
