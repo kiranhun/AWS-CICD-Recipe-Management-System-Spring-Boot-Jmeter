@@ -1,0 +1,5 @@
+amazonProperties:
+  endpointUrl: https://s3.amazonaws.com
+  accessKey: AKIAJEI22UFEJKZSVPWQ
+  secretKey: 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
+  bucketName: webapp.kiranravi.me
