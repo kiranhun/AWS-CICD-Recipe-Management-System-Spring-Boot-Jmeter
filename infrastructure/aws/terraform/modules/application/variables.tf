@@ -49,8 +49,161 @@ variable "subnet_id" {
   type        = string
 }
 
+variable "subnet_id2" {
+  description = "Subnet ID for EC2 Instance(s). If multiple are provided, instances will be distributed amongst them."
+  type        = string
+}
+
+variable "subnet_id3" {
+  description = "Subnet ID for EC2 Instance(s). If multiple are provided, instances will be distributed amongst them."
+  type        = string
+}
+
 variable "key_pair" {
   description = "Name of an existing EC2 KeyPair to enable SSH access to the instances."
   type        = string
-  default     = ""
+}
+
+variable "subnetGroupName" {
+  description = "Name of Subnet Group."
+  type        = string
+  default     = "csye6225-dbsubnetgroup"
+}
+
+variable "storage" {
+  description = "Storage capacity."
+  type        = number
+  default     = 20
+}
+
+variable "storage_type" {
+  description = "Storage type."
+  type        = string
+  default     = "gp2"
+}
+
+variable "identifier" {
+  description = "rds instance name."
+  type        = string
+  default     = "csye6225-fall2019"
+}
+
+variable "engine" {
+  description = "db engine name."
+  type        = string
+  default     = "mariadb"
+}
+
+variable "engine_version" {
+  description = "db version."
+  type        = string
+  default     = "10.2"
+}
+
+variable "instance_class" {
+  description = "instance type."
+  type        = string
+  default     = "db.t2.micro"
+}
+
+variable "multi_az" {
+  description = "availability zone."
+  type        = string
+  default     = "false"
+}
+
+variable "db_name" {
+  description = "db name."
+  type        = string
+  default     = "csye6225"
+}
+
+variable "db_username" {
+  description = "db name."
+  type        = string
+  default     = "dbuser"
+}
+
+variable "db_password" {
+  description = "db name."
+  type        = string
+  default     = "28041992"
+}
+
+variable "parameter_group_name" {
+  description = "parameter_group_name."
+  type        = string
+  default     = "default.mariadb10.2"
+}
+
+variable "publicly_accessible" {
+  description = "publicly_accessible."
+  type        = string
+  default     = "true"
+}
+
+variable "port" {
+  description = "port number."
+  type        = string
+  default     = "3306"
+}
+
+variable "skip_final_snapshot" {
+  description = "skip_final_snapshot."
+  type        = string
+  default     = "true"
+}
+
+
+variable "billing_mode" {
+  description = "skip_final_snapshot."
+  type        = string
+  default     = "PROVISIONED"
+}
+
+variable "read_capacity" {
+  description = "read capacity"
+  type        = number
+  default     = 20
+}
+
+variable "write_capacity" {
+  description = "write capacity"
+  type        = number
+  default     = 20
+}
+
+variable "hash_key" {
+  description = "hash value"
+  type        = string
+  default     = "id"
+}
+
+variable "attribute_name" {
+  description = "attribute name value"
+  type        = string
+  default     = "id"
+}
+
+variable "attribute_type" {
+  description  = "Attribute Type"
+  type         = string
+  default      = "S"
+}
+
+variable "security_group_list" {
+  description = "group of security ids"
+  type        = list(string)
+}
+
+variable "dynamo_db_name" {
+  description = "db name."
+  type        = string
+  default     = "dynamo_csye6225"
+}
+
+variable "bucket_name" {
+  description = "bucket name."
+  type        = string
+  default     = "webapp.amoghdoijode.me"
 }
