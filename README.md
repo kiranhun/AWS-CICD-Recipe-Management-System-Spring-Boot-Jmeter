@@ -26,6 +26,8 @@ Pre-req : Need tool to run REST endpoints like POSTMAN, MariaDB & IDE
     * Test connection
     * Run application by traversing to ccwebapp/webapp/recipie_management_system/src/main/java/com/allstars/main.java
     * Console should state the application has started
+    * From the command line run ./mvnw clean install -Ddomain={localhost} -Dusername={username} -Dpassword={password} -Daccess={aws access key} -Dsecret={aws secret key}  -Dbucket={s3 bucket name}
+    * After the war file is built run  java -jar recipie_management_system-0.0.1-SNAPSHOT.war --domain={localhost} --username={username} --password={password} --access={access key}  --secret={secret key}  --bucket={bucketname}
 
 ## Deploy Instructions
     * To hit the end points of the REST API use any REST tool like POSTMAN
@@ -83,6 +85,30 @@ Pre-req : Need tool to run REST endpoints like POSTMAN, MariaDB & IDE
         - Success : 204 NO CONTENT
         - Failure : 401 UNAUTHORIZED
                   : 404 NOT FOUND
+      
+     * To Add and Image to the recipe(POST)
+        - /v1/recipe/{id}/image & set Authentication to Basic Auth
+        - select form-data in body and add an image
+        - Success : 201
+            {
+              "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+              "url": "https://s3-eu-central-1.amazonaws.com/BUCKET/FILE"
+            }
+        - Failure : 400 Bad Request
+     * To get an Image(GET)
+        - /v1/recipe/{recipeId}/image/{imageId} and set Authentication to no Auth
+        - Success : 200
+            {
+              "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+              "url": "https://s3-eu-central-1.amazonaws.com/BUCKET/FILE"
+            }
+        - Failure : 404 Not Found
+     * To Delete and image (Delete)
+        - /v1/recipe/{recipeId}/image/{imageId} and set Authentication to Basic Auth
+        - Success : 204 No Content
+        - Failure : 401 Unauthorized
+                    404 Not Found
+                
             
 ## Running Tests
 

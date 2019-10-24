@@ -23,10 +23,18 @@ Run `terraform destroy` to destroy the network structure
 
 **Inputs**
 
-    1. Provide VPC name
-    2. PRovide VPC cidr
-    3. Provide three Subnet cidr
-    4. Provide region
+     1. Provide VPC name
+        2. PRovide VPC cidr
+        3. Provide three Subnet cidr
+        4. Provide region
+        5. AMI inage id
+        6. S3 bucket name
+    
+    We can give all inputs in one form - 
+    
+    `terraform plan -out=test -var aws_profile={profile} -var vpc_name={vpcname} -var cidr_range={vpc cidr} -var subnetcidr1={subnet cidr} -var subnetcidr2={subnet cidr} -var subnetcidr3={subnet cidr} -var region={region} -var image_id={image_ID} -var bucket_name={s3_bucketname}`
+    
+    To apply changes - `terraform apply test`
 
 We can give all inputs in one form - 
 

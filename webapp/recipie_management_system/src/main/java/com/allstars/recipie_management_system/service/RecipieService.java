@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class RecipieService {
@@ -92,4 +93,16 @@ public class RecipieService {
         }
     }
 
+    public boolean isRecipeImagePresent( Recipie recipie) {
+        if(recipie.getImage() == null) return false;
+        return true;
+    }
+
+    public Optional<Recipie> findById(String idRecipe) {
+        try{
+            return recipieDao.findById(idRecipe);
+        }catch(Exception exc) {
+            return null;
+        }
+    }
 }
