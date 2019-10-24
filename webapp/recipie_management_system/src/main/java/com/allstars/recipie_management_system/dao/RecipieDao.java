@@ -13,8 +13,4 @@ public interface RecipieDao extends CrudRepository<Recipie, String> {
 
     Recipie findByRecipeid(String id);
 
-    //Recipie findByRecipeId(UUID recipeid);
-
-    /*@Query("SELECT count(recipeid) FROM recipie WHERE recipeid=:recipeid")
-    int isRecipiePresent(@Param("recipeid") UUID recipeid);*/
 }

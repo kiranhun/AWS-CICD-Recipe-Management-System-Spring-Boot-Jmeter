@@ -66,6 +66,9 @@ public class Recipie {
     @JoinColumn(name="NIid")
     private NutritionInformation nutritionInformation;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private RecipeImage image;
+
     public Recipie(Date created_ts, Date updated_ts, Integer cook_time_in_min, Integer prep_time_in_min, int total_time_in_min, String title, String cuisine, Integer servings, List<String> ingredients, Set<OrderedList> steps, NutritionInformation nutritionInformation) {
         //this.created_ts = created_ts;
         this.updated_ts = updated_ts;
@@ -195,6 +198,14 @@ public class Recipie {
 
     public void setNutritionInformation(NutritionInformation nutritionInformation) {
         this.nutritionInformation = nutritionInformation;
+    }
+
+    public RecipeImage getImage() {
+        return image;
+    }
+
+    public void setImage(RecipeImage image) {
+        this.image = image;
     }
 }
 
