@@ -1,4 +1,39 @@
+resource "aws_iam_instance_profile" "ec2instanceprofile" {
+  name = "ec2instanceprofile"
+  depends_on = [aws_iam_role_policy_attachment.EC2ServiceRole_CRUD_policy_attach]
+  role = var.ec2RoleName
+}
 
+resource "aws_iam_policy" "s3Bucket-CRUD-Policy" {
+  name        = "s3Bucket-CRUD-Policy"
+  description = "A Upload policy"
+  depends_on = [aws_s3_bucket.bucket]
+  policy = <<EOF
+{
+          "Version" : "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "AllowGetPutDeleteActionsOnS3Bucket",
+              "Effect": "Allow",
+              "Action": ["s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject",
+                "s3:GetBucketAcl",
+                "s3:GetObjectAcl",
+                "s3:GetObjectVersionAcl",
+                "s3:ListAllMyBuckets",
+                "s3:ListBucket"],
+              "Resource": ["${aws_s3_bucket.bucket.arn}","${aws_s3_bucket.bucket.arn}/*"]
+            }
+          ]
+        }
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "EC2ServiceRole_CRUD_policy_attach" {
+  role       = var.ec2RoleName
+  policy_arn = "${aws_iam_policy.s3Bucket-CRUD-Policy.arn}"
+}
 
 resource "aws_instance" "application_ec2" {
   ami           = var.image_id
@@ -7,11 +42,14 @@ resource "aws_instance" "application_ec2" {
   vpc_security_group_ids = [var.security_group]
   key_name = var.key_pair
   iam_instance_profile = "${aws_iam_instance_profile.ec2instanceprofile.name}"
-  root_block_device {
-    volume_type = var.primary_ebs_volume_type
-    volume_size = var.primary_ebs_volume_size
-    delete_on_termination = var.delete_on_termination
-  }
+  user_data = "${templatefile("${path.module}/user_data.sh",
+                                    {
+                                      aws_db_endpoint = "${aws_db_instance.rdsInstanceId.endpoint}",
+                                      bucketName = var.bucket_name,
+                                      dbName = var.db_name,
+                                      dbUserName = var.db_username,
+                                      dbPassword = var.db_password
+                                    })}"
 
   tags = {
     Name = "Web Server"
@@ -20,12 +58,9 @@ resource "aws_instance" "application_ec2" {
  /* ebs_block_device {
     device_name           = var.device_name
     delete_on_termination = var.delete_on_termination
-  }*/ 
-
+  }*/
   #add db dependency
   depends_on = [aws_db_instance.rdsInstanceId, aws_s3_bucket.bucket, aws_iam_instance_profile.ec2instanceprofile ]
-  #add s3 dependency
-  # depends_on = [aws_s3_bucket.bucket]
 }
 
 resource "aws_db_subnet_group" "dbSubnetGroupId" {

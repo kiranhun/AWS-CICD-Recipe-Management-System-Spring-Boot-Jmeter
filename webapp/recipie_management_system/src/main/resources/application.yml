@@ -1,5 +1,3 @@
 amazonProperties:
   endpointUrl: https://s3.amazonaws.com
-  accessKey: ${access}
-  secretKey: ${secret}
   bucketName: ${bucket}
