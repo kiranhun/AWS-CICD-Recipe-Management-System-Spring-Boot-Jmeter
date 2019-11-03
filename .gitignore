@@ -1,3 +1,39 @@
+HELP.md
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+
+#terraform
+.terraform
+*.tfstate
+*.tfvars
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -66,7 +102,6 @@ instance/
 # Sphinx documentation
 docs/_build/
 
-# PyBuilder
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -130,3 +165,4 @@ log/
 #zip
 .zip
 
+target/
