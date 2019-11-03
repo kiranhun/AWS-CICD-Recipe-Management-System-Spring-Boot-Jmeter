@@ -127,5 +127,7 @@ venv.bak/
 
 #maven
 log/
-target/
+
+#zip
+.zip
 
