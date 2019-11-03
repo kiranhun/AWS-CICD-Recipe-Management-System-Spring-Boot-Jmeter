@@ -51,8 +51,6 @@ public class RecipeImageAwsService implements RecipeImageService {
     private String secretKey;
 
 
-
-
     @PostConstruct
     private void initializeAmazon() {
         AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);

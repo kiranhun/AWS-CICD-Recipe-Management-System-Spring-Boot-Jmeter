@@ -122,6 +122,9 @@ venv.bak/
 #class
 .class
 
+#zip
+.zip
+
 #maven
 log/
 target/

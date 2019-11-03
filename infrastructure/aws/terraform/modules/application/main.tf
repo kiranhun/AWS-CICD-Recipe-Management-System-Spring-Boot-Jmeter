@@ -1,23 +1,29 @@
+
+
 resource "aws_instance" "application_ec2" {
   ami           = var.image_id
   subnet_id     = var.subnet_id2
   instance_type = var.instance_type
   vpc_security_group_ids = [var.security_group]
   key_name = var.key_pair
-
+  iam_instance_profile = "${aws_iam_instance_profile.ec2instanceprofile.name}"
   root_block_device {
     volume_type = var.primary_ebs_volume_type
     volume_size = var.primary_ebs_volume_size
     delete_on_termination = var.delete_on_termination
   }
 
+  tags = {
+    Name = "Web Server"
+  }
+
  /* ebs_block_device {
     device_name           = var.device_name
     delete_on_termination = var.delete_on_termination
-  }*/
+  }*/ 
 
   #add db dependency
-  depends_on = [aws_db_instance.rdsInstanceId, aws_s3_bucket.bucket]
+  depends_on = [aws_db_instance.rdsInstanceId, aws_s3_bucket.bucket, aws_iam_instance_profile.ec2instanceprofile ]
   #add s3 dependency
   # depends_on = [aws_s3_bucket.bucket]
 }
