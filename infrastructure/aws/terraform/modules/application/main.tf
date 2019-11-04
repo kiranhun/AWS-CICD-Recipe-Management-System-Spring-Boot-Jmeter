@@ -118,7 +118,7 @@ resource "aws_s3_bucket" "bucket" {
   }
   
   force_destroy = true
-
+  depends_on= [aws_db_instance.rdsInstanceId]
   lifecycle_rule {
     enabled = true
 

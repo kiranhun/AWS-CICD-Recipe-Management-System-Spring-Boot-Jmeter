@@ -72,7 +72,7 @@ resource "aws_iam_policy" "CodeDeploy-EC2-S3" {
                 "s3:List*"
             ],
             "Effect": "Allow",
-            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}", "arn:aws:s3:::aws-codedeploy-us-east-2/*",
+            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}/*", "arn:aws:s3:::aws-codedeploy-us-east-2/*",
               "arn:aws:s3:::aws-codedeploy-us-east-1/*"]
         }
     ]
@@ -91,9 +91,14 @@ resource "aws_iam_policy" "CircleCI-Upload-To-S3" {
         {
             "Effect": "Allow",
             "Action": [
+                "s3:GetBucketAcl",
+                "s3:GetObjectAcl",
+                "s3:GetObjectVersionAcl",
+                "s3:ListAllMyBuckets",
+                "s3:ListBucket",
                 "s3:PutObject"
             ],
-            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}"]
+            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}/*"]
         }
     ]
 }
@@ -190,7 +195,7 @@ resource "aws_codedeploy_app" "csye6225-webapp" {
 resource "aws_iam_policy" "CircleCI-Code-Deploy" {
   name        = "CircleCI-Code-Deploy"
   description = "A Upload policy"
-
+  depends_on = [aws_codedeploy_deployment_group.csye6225-webapp-deployment]
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -199,7 +204,8 @@ resource "aws_iam_policy" "CircleCI-Code-Deploy" {
       "Effect": "Allow",
       "Action": [
         "codedeploy:RegisterApplicationRevision",
-        "codedeploy:GetApplicationRevision"
+        "codedeploy:GetApplicationRevision",
+        "codedeploy:ListApplicationRevisions"
       ],
       "Resource": [
         "arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:application:${aws_codedeploy_app.csye6225-webapp.name}"
@@ -212,7 +218,7 @@ resource "aws_iam_policy" "CircleCI-Code-Deploy" {
         "codedeploy:GetDeployment"
       ],
       "Resource": [
-        "*"
+        "arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:deploymentgroup:${aws_codedeploy_app.csye6225-webapp.name}/${aws_codedeploy_deployment_group.csye6225-webapp-deployment.deployment_group_name}"
       ]
     },
     {
