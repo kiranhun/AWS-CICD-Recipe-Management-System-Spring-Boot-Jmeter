@@ -91,8 +91,6 @@ resource "aws_iam_policy" "CircleCI-Upload-To-S3" {
         {
             "Effect": "Allow",
             "Action": [
-                "s3:Get*",
-                "s3:List*",
                 "s3:PutObject"
             ],
             "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}/*"]
@@ -192,7 +190,7 @@ resource "aws_codedeploy_app" "csye6225-webapp" {
 resource "aws_iam_policy" "CircleCI-Code-Deploy" {
   name        = "CircleCI-Code-Deploy"
   description = "A Upload policy"
-
+  depends_on = [aws_codedeploy_deployment_group.csye6225-webapp-deployment]
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -214,7 +212,7 @@ resource "aws_iam_policy" "CircleCI-Code-Deploy" {
         "codedeploy:GetDeployment"
       ],
       "Resource": [
-        "*"
+        "arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:deploymentgroup:${aws_codedeploy_app.csye6225-webapp.name}/${aws_codedeploy_deployment_group.csye6225-webapp-deployment.deployment_group_name}"
       ]
     },
     {
