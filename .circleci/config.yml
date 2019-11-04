@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Build War
           command: |
-            cd ../webapp/recipie_management_system
+            cd ./webapp/recipie_management_system
             ./mvnw clean install
             cd target
             ls -al
