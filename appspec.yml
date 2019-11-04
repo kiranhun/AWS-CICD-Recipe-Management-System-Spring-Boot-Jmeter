@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:             
-  - source: .webapp/recipie_management_system/target/ROOT.war
+  - source: ./webapp/recipie_management_system/target/ROOT.war
     destination: /opt/tomcat/webapps
 
 hooks:
