@@ -47,7 +47,9 @@ jobs:
             pip3 --version
       - run:
           name: AWS CLI Install
-          command: sudo pip3 install awscli
+          command: |
+            sudo pip3 install awscli
+            aws --version
       - run:
           name: Upload to s3
           command: |
