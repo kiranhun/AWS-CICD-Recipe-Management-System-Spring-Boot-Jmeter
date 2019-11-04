@@ -72,7 +72,7 @@ resource "aws_iam_policy" "CodeDeploy-EC2-S3" {
                 "s3:List*"
             ],
             "Effect": "Allow",
-            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}", "arn:aws:s3:::aws-codedeploy-us-east-2/*",
+            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}/*", "arn:aws:s3:::aws-codedeploy-us-east-2/*",
               "arn:aws:s3:::aws-codedeploy-us-east-1/*"]
         }
     ]
@@ -93,7 +93,7 @@ resource "aws_iam_policy" "CircleCI-Upload-To-S3" {
             "Action": [
                 "s3:PutObject"
             ],
-            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}"]
+            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}/*"]
         }
     ]
 }
