@@ -204,7 +204,8 @@ resource "aws_iam_policy" "CircleCI-Code-Deploy" {
       "Effect": "Allow",
       "Action": [
         "codedeploy:RegisterApplicationRevision",
-        "codedeploy:GetApplicationRevision"
+        "codedeploy:GetApplicationRevision",
+        "codedeploy:ListApplicationRevisions"
       ],
       "Resource": [
         "arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:application:${aws_codedeploy_app.csye6225-webapp.name}"
