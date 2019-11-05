@@ -7,3 +7,5 @@ sudo echo "JAVA_OPTS=\"\$JAVA_OPTS -Dbucket=${bucketName}\"" >> /opt/tomcat/bin/
 sudo echo "JAVA_OPTS=\"\$JAVA_OPTS -DdbName=${dbName}"\" >> /opt/tomcat/bin/setenv.sh
 sudo echo "JAVA_OPTS=\"\$JAVA_OPTS -Dusername=${dbUserName}"\" >> /opt/tomcat/bin/setenv.sh
 sudo echo "JAVA_OPTS=\"\$JAVA_OPTS -Dpassword=${dbPassword}\"" >> /opt/tomcat/bin/setenv.sh
+sudo /opt/tomcat/bin/./shutdown.sh
+sudo /opt/tomcat/bin/./startup.sh
