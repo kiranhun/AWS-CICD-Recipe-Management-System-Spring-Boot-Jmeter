@@ -99,21 +99,25 @@ public class RecipeImageController {
                 RecipeImage recipeImgOfPassedrecipe = recipie.getImage();
                 if (recipeImgOfPassedrecipe != null){
                     RecipeImage recipeImage = recipeImageDao.findByImageId(idImage);
-                    if (recipeImgOfPassedrecipe.getImageId().equals(recipeImage.getImageId())){
-                        if (recipeImage != null) {
-                            recipeImageService.deleteImage(recipeImage,recipie.getRecipeId());
-                            recipie.setImage(null);
-                            recipeImageDao.delete(recipeImage);
-                            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+                    if (recipeImage != null){
+                        if (recipeImgOfPassedrecipe.getImageId().equals(recipeImage.getImageId())){
+                            if (recipeImage != null) {
+                                recipeImageService.deleteImage(recipeImage,recipie.getRecipeId());
+                                recipie.setImage(null);
+                                recipeImageDao.delete(recipeImage);
+                                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+                            }
+                            else {
+                                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+                            }
                         }
                         else {
                             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
                         }
                     }
-                    else {
+                    else{
                         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
                     }
-
                 }
                 else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
