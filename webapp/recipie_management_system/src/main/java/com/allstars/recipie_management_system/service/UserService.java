@@ -1,6 +1,8 @@
 package com.allstars.recipie_management_system.service;
-
-
+import com.allstars.recipie_management_system.controller.UserController;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import com.timgroup.statsd.StatsDClient;
 import com.allstars.recipie_management_system.dao.Userdao;
 import com.allstars.recipie_management_system.entity.User;
 import com.allstars.recipie_management_system.entity.UserDetailsCustom;
@@ -27,12 +29,20 @@ public class UserService implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public User saveUser(User user){
+    @Autowired
+    private StatsDClient statsDClient;
 
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    public User saveUser(User user){
         try {
             passwordEncoder = new BCryptPasswordEncoder();
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            long startTime = System.currentTimeMillis();
             user = userDao.save(user);
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("SaveUserQuery", duration);
         } catch (Exception e){
             return null;
         }

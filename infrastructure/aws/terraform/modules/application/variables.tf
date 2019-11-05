@@ -206,3 +206,8 @@ variable "bucket_name" {
   description = "Bucket name."
   type        = string
 }
+
+variable "ec2RoleName" {
+  description = "ec2 role name."
+  type        = string
+}

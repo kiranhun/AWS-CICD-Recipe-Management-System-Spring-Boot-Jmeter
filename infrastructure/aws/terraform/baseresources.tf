@@ -20,4 +20,5 @@ module "ec2_host" {
     image_id            = var.image_id
     key_pair            = var.key_pair
     bucket_name         = var.bucket_name
+    ec2RoleName		= var.ec2RoleName
 }
