@@ -34,17 +34,21 @@ public class RecipieService {
     private final static Logger logger = LoggerFactory.getLogger(RecipieController.class);
 
     public Recipie SaveRecipie(Recipie recipie, User user){
-        recipie.setUser(user);
-        recipie.setAuthor_id(user.getUuid());
-        recipie.setCreated_ts(new Date());
-        recipie.setUpdated_ts();
-        recipie.setTotal_time_in_min();
-        long startTime = System.currentTimeMillis();
-        recipie = recipieDao.save(recipie);
-        long endTime = System.currentTimeMillis();
-        long duration = (endTime - startTime);
-        statsDClient.recordExecutionTime("SaveRecipieQuery", duration);
-        return recipie;
+        try {
+            recipie.setUser(user);
+            recipie.setAuthor_id(user.getUuid());
+            recipie.setCreated_ts(new Date());
+            recipie.setUpdated_ts();
+            recipie.setTotal_time_in_min();
+            long startTime = System.currentTimeMillis();
+            recipie = recipieDao.save(recipie);
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("SaveRecipieQuery", duration);
+            return recipie;
+        }catch(Exception e){
+            return null;
+        }
     }
 
 

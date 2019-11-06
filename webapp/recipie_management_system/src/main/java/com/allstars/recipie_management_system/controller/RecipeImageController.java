@@ -68,7 +68,7 @@ public class RecipeImageController {
         Recipie recipie = recipieDao.findByRecipeid(idRecipe);
 
         if (recipieService.isRecipeImagePresent(recipie)) {
-            LOGGER.error("POST->Cover exist already perform PUT to modify");
+            logger.error("POST->Cover exist already perform PUT to modify");
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime);
             statsDClient.recordExecutionTime("postImageTime", duration);
