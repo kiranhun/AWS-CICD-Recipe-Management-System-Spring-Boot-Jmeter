@@ -64,7 +64,11 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String emailId) throws UsernameNotFoundException {
+        long startTime = System.currentTimeMillis();
         User user = userDao.findByEmailId(emailId);
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime);
+        statsDClient.recordExecutionTime("getUserQuery", duration);
         if(user==null) throw new UsernameNotFoundException("User with given emailId does not exist");
         else return new UserDetailsCustom(user);
     }
@@ -99,7 +103,11 @@ public class UserService implements UserDetailsService {
                         currUser.setLast_name(newUser.getLast_name());
                         currUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
                         currUser.setAccount_updated(new Date());
+                        long startTime = System.currentTimeMillis();
                         userDao.save(currUser);
+                        long endTime = System.currentTimeMillis();
+                        long duration = (endTime - startTime);
+                        statsDClient.recordExecutionTime("updateUserQuery", duration);
                         return true;
                     }
                     else{
