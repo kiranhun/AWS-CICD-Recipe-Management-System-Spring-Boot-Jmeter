@@ -110,12 +110,12 @@ Pre-req : Need tool to run REST endpoints like POSTMAN, MariaDB & IDE
                     404 Not Found
                 
             
-## Running Tests
+### Running Tests
 
     * Implemented Junit using Mockito for unit testing for creation of user & create recipe
     * Run Application using "Run All Tests"
 
-## CI/CD
+### CI/CD
 Om gam ganapataye namaha
 
 
