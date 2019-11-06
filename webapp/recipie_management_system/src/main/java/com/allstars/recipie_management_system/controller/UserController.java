@@ -48,7 +48,7 @@ public class UserController {
     public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult errors,
                                         HttpServletResponse response) throws Exception {
         RegistrationStatus registrationStatus;
-        statsDClient.incrementCounter("v1.user.api.post");
+        statsDClient.incrementCounter("endpoint.user.api.post");
         long startTime = System.currentTimeMillis();
 
         User u;
@@ -74,7 +74,7 @@ public class UserController {
 
     @RequestMapping(value="v1/user/self" ,method = RequestMethod.GET)
     public ResponseEntity<User> getUser(@RequestHeader("Authorization") String token, HttpServletRequest request) throws UnsupportedEncodingException {
-        statsDClient.incrementCounter("v1.user.self.api.get");
+        statsDClient.incrementCounter("endpoint.user.self.api.get");
        try {
            if(token == null){
                return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -103,7 +103,7 @@ public class UserController {
     @RequestMapping(value = "v1/user/self", method = RequestMethod.PUT)
     public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String header, @Valid @RequestBody User user, BindingResult errors,
                                              HttpServletResponse response) throws UnsupportedEncodingException {
-        statsDClient.incrementCounter("v1.user.self.api.put");
+        statsDClient.incrementCounter("endpoint.user.self.api.put");
         try {
             long startTime = System.currentTimeMillis();
 
