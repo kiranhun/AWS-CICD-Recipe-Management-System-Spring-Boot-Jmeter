@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @RestController
 @Validated
-@RequestMapping("/v2/recipie/{idRecipe}")
+@RequestMapping("/v2/recipie/{idRecipe}/*")
 public class RecipeImageController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipeImageController.class);
@@ -46,7 +46,7 @@ public class RecipeImageController {
     RecipeImageDao recipeImageDao;
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/v1/recipie/{idRecipe}/image")
+    @RequestMapping(method = RequestMethod.POST, value = "/image")
     public ResponseEntity<?> addRecipeImage(@PathVariable String idRecipe, @RequestParam MultipartFile image, HttpServletRequest request,@RequestHeader("Authorization") String token) throws Exception {
 
         if (!recipeImageService.isImagePresent(image))
