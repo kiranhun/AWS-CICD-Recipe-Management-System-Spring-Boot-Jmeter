@@ -1,8 +1,8 @@
 version: 2
 jobs:
   build:
-    branches:
-      only: Assignment7
+#    branches:
+#      only: Assignment7
     docker:
       - image: circleci/openjdk:8-jdk
     steps:

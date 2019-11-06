@@ -24,6 +24,7 @@ import java.util.UUID;
 
 @RestController
 @Validated
+@RequestMapping("/v1/recipie/{idRecipe}/*")
 public class RecipeImageController {
 
 
@@ -46,9 +47,10 @@ public class RecipeImageController {
 
     private final static Logger logger = LoggerFactory.getLogger(RecipeImageController.class);
 
-
-    @RequestMapping(method = RequestMethod.POST, value = "/v1/recipie/{idRecipe}/image")
+    @RequestMapping(method = RequestMethod.POST, value = "/image")
     public ResponseEntity<?> addRecipeImage(@PathVariable String idRecipe, @RequestParam MultipartFile image, HttpServletRequest request,@RequestHeader("Authorization") String token) throws Exception {
+
+
         statsDClient.incrementCounter("endpoint.recipie.idRecipe.image.api.post");
         long startTime = System.currentTimeMillis();
         if (!recipeImageService.isImagePresent(image)) {
@@ -112,7 +114,7 @@ public class RecipeImageController {
     }
 
 
-    @DeleteMapping("/v1/recipie/{idRecipe}/image/{idImage}")
+    @DeleteMapping("/image/{idImage}")
     public ResponseEntity<?> deleteRecipeImage(@PathVariable String idRecipe, @PathVariable String idImage,@RequestHeader("Authorization") String token) throws Exception {
         statsDClient.incrementCounter("endpoint.recipie.idRecipe.image.idImage.api.delete");
         long startTime = System.currentTimeMillis();
@@ -183,7 +185,7 @@ public class RecipeImageController {
         }
     }
 
-    @GetMapping("/v1/recipie/{idRecipe}/image/{idImage}")
+    @GetMapping("/image/{idImage}")
     public ResponseEntity<?> getImage(@PathVariable String idRecipe, @PathVariable String idImage) throws Exception {
         statsDClient.incrementCounter("endpoint.recipie.idRecipe.image.idImage.api.get");
         long startTime = System.currentTimeMillis();
