@@ -1,10 +1,16 @@
 package com.allstars.recipie_management_system.service;
 
+import com.allstars.recipie_management_system.controller.RecipieController;
+import com.allstars.recipie_management_system.dao.RecipeImageDao;
 import com.allstars.recipie_management_system.dao.RecipieDao;
 import com.allstars.recipie_management_system.dao.Userdao;
+import com.allstars.recipie_management_system.entity.RecipeImage;
 import com.allstars.recipie_management_system.entity.Recipie;
 import com.allstars.recipie_management_system.entity.User;
 import com.allstars.recipie_management_system.errors.RecipieCreationStatus;
+import com.timgroup.statsd.StatsDClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +30,34 @@ public class RecipieService {
     @Autowired
     private Userdao userdao;
 
+    @Autowired
+    private StatsDClient statsDClient;
+
+    @Autowired
+    private RecipeImageDao recipeImageDao;
+
+    @Autowired
+    private RecipeImageAwsService recipeImageAwsService;
+
+
+    private final static Logger logger = LoggerFactory.getLogger(RecipieController.class);
+
     public Recipie SaveRecipie(Recipie recipie, User user){
-        recipie.setUser(user);
-        recipie.setAuthor_id(user.getUuid());
-        recipie.setCreated_ts(new Date());
-        recipie.setUpdated_ts();
-        recipie.setTotal_time_in_min();
-        recipie = recipieDao.save(recipie);
-        return recipie;
+        try {
+            recipie.setUser(user);
+            recipie.setAuthor_id(user.getUuid());
+            recipie.setCreated_ts(new Date());
+            recipie.setUpdated_ts();
+            recipie.setTotal_time_in_min();
+            long startTime = System.currentTimeMillis();
+            recipie = recipieDao.save(recipie);
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("SaveRecipieQuery", duration);
+            return recipie;
+        }catch(Exception e){
+            return null;
+        }
     }
 
 
@@ -59,17 +85,37 @@ public class RecipieService {
 
     public Recipie getRecipe(String recipeid) {
         //if(recipieDao.isRecipiePresent(recipeid)>0) {
-            return recipieDao.findByRecipeid(recipeid);
-        //}
+            long startTime = System.currentTimeMillis();
+            Recipie recipie = recipieDao.findByRecipeid(recipeid);
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("getRecipieQuery", duration);
+            return recipie;
+            //}
        // return null;
     }
 
-    public void deleteRecipe(String recipeId) {
+    public void deleteRecipe(String recipeId){
+        long startTime = System.currentTimeMillis();
+        Recipie recipie = recipieDao.findByRecipeid(recipeId);
+        RecipeImage recipeImage = recipie.getImage();
+
+        if(recipeImage != null){
+            try{
+                recipeImageAwsService.deleteImage(recipeImage,recipeId);
+                recipeImageDao.delete(recipeImage);
+            }catch (Exception e){
+                logger.warn("Recipe image doesn't exist");
+            }
+        }
         recipieDao.deleteById(recipeId);
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime);
+        statsDClient.recordExecutionTime("deleteRecipieQuery", duration);
     }
 
     public ResponseEntity<?> updateRecipie(String id, String userEmailId, Recipie recipie){
-
+        long startTime = System.currentTimeMillis();
         Recipie retrivedRecipie = recipieDao.findByRecipeid(id);
 
         if(retrivedRecipie == null){
@@ -85,6 +131,9 @@ public class RecipieService {
                 recipie.setUpdated_ts();
                 recipie.setTotal_time_in_min();
                 recipieDao.save(recipie);
+                long endTime = System.currentTimeMillis();
+                long duration = (endTime - startTime);
+                statsDClient.recordExecutionTime("updateRecipieQuery", duration);
                 return new ResponseEntity<Recipie>(recipie, HttpStatus.CREATED);
             }
             else{
