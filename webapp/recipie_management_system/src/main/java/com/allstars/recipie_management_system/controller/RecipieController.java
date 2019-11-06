@@ -1,12 +1,13 @@
 package com.allstars.recipie_management_system.controller;
-
-
 import com.allstars.recipie_management_system.dao.Userdao;
 import com.allstars.recipie_management_system.entity.Recipie;
 import com.allstars.recipie_management_system.entity.User;
 import com.allstars.recipie_management_system.errors.RecipieCreationStatus;
 import com.allstars.recipie_management_system.service.RecipieService;
 import com.allstars.recipie_management_system.validators.RecipieValidator;
+import com.timgroup.statsd.StatsDClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,11 @@ public class RecipieController {
     @Autowired
     private Userdao userdao;
 
+    @Autowired
+    private StatsDClient statsDClient;
+
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(recipieValidator);
@@ -40,58 +46,68 @@ public class RecipieController {
     public ResponseEntity<?> createRecipie(@RequestHeader("Authorization") String token, @Valid @RequestBody Recipie recipie, BindingResult errors,
                                            HttpServletResponse response) throws Exception{
         RecipieCreationStatus recipieCreationStatus;
-
+        statsDClient.incrementCounter("v1.recipie.api.post");
         if(errors.hasErrors()){
             recipieCreationStatus = recipieService.getRecipieCreationStatus(errors);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    recipieCreationStatus);
+            logger.error("Recipe Creation Failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(recipieCreationStatus);
         }else {
             String[] authDetails = decryptAuthenticationToken(token);
             User user = userdao.findByEmailId(authDetails[0]);
             Recipie newrecipie = recipieService.SaveRecipie(recipie, user);
+            logger.info("Recipe creation successful");
             return new ResponseEntity<Recipie>(newrecipie, HttpStatus.CREATED);
         }
     }
 
     @RequestMapping(value = "v1/recipie/{id}", method = RequestMethod.GET)
     public ResponseEntity<Recipie> getRecipe(@PathVariable("id") String id) {
+        statsDClient.incrementCounter("v1.recipie.id.api.get");
         //System.out.println(recipeId);
         //UUID recipeId = UUID.fromString(id);
         Recipie recipe = recipieService.getRecipe(id);
         if (null!=recipe) {
+            logger.info("Recipe fetch successful");
             return new ResponseEntity<Recipie>(recipe, HttpStatus.OK);
         }
+        logger.error("Recipe fetch failed");
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/v1/recipie/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteRecipe(@PathVariable("id") String recipeId, @RequestHeader("Authorization") String token) throws UnsupportedEncodingException {
+        statsDClient.incrementCounter("v1.recipie.id.api.delete");
         String userDetails[] = decryptAuthenticationToken(token);
         Recipie existingRecipie = recipieService.getRecipe(recipeId);
         if(null != existingRecipie){
             if(existingRecipie.getUser().getEmailId().equalsIgnoreCase(userDetails[0])) {
                 recipieService.deleteRecipe(recipeId);
+                logger.info("Recipe delete successful");
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            }else {
+                logger.error("user not authorised to delete this recipe");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+        logger.error("Recipe not found");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @RequestMapping(value = "v1/recipie/{recipieid}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateRecipie(@PathVariable("recipieid") String id, @RequestHeader("Authorization") String token, @Valid  @RequestBody Recipie recipie, BindingResult errors,
                                                 HttpServletResponse response) throws UnsupportedEncodingException {
-
+        statsDClient.incrementCounter("v1.recipie.recipieid.api.put");
         RecipieCreationStatus recipieCreationStatus;
 
         if(errors.hasErrors()){
             recipieCreationStatus = recipieService.getRecipieCreationStatus(errors);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    recipieCreationStatus);
+            logger.error("Recipe update failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(recipieCreationStatus);
         }else {
             String[] authDetails = decryptAuthenticationToken(token);
             String userEmailID = authDetails[0];
             String t_id = id;
+            logger.info("Recipe Update successful");
             return recipieService.updateRecipie(t_id,userEmailID,recipie);
         }
 
