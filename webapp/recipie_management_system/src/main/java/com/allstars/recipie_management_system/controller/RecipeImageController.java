@@ -23,6 +23,7 @@ import java.util.UUID;
 
 @RestController
 @Validated
+@RequestMapping("/v2/recipie/{idRecipe}")
 public class RecipeImageController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipeImageController.class);
@@ -85,7 +86,7 @@ public class RecipeImageController {
     }
 
 
-    @DeleteMapping("/v1/recipie/{idRecipe}/image/{idImage}")
+    @DeleteMapping("/image/{idImage}")
     public ResponseEntity<?> deleteRecipeImage(@PathVariable String idRecipe, @PathVariable String idImage,@RequestHeader("Authorization") String token) throws Exception {
 
         String userDetails[] = decryptAuthenticationToken(token);
@@ -134,7 +135,7 @@ public class RecipeImageController {
         }
     }
 
-    @GetMapping("/v1/recipie/{idRecipe}/image/{idImage}")
+    @GetMapping("/image/{idImage}")
     public ResponseEntity<?> getImage(@PathVariable String idRecipe, @PathVariable String idImage) throws Exception {
 
         Recipie recipie = recipieDao.findByRecipeid(idRecipe);;
