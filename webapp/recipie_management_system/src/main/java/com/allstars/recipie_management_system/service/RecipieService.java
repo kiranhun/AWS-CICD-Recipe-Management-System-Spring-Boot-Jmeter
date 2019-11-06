@@ -1,8 +1,10 @@
 package com.allstars.recipie_management_system.service;
 
 import com.allstars.recipie_management_system.controller.RecipieController;
+import com.allstars.recipie_management_system.dao.RecipeImageDao;
 import com.allstars.recipie_management_system.dao.RecipieDao;
 import com.allstars.recipie_management_system.dao.Userdao;
+import com.allstars.recipie_management_system.entity.RecipeImage;
 import com.allstars.recipie_management_system.entity.Recipie;
 import com.allstars.recipie_management_system.entity.User;
 import com.allstars.recipie_management_system.errors.RecipieCreationStatus;
@@ -30,6 +32,13 @@ public class RecipieService {
 
     @Autowired
     private StatsDClient statsDClient;
+
+    @Autowired
+    private RecipeImageDao recipeImageDao;
+
+    @Autowired
+    private RecipeImageAwsService recipeImageAwsService;
+
 
     private final static Logger logger = LoggerFactory.getLogger(RecipieController.class);
 
@@ -86,8 +95,19 @@ public class RecipieService {
        // return null;
     }
 
-    public void deleteRecipe(String recipeId) {
+    public void deleteRecipe(String recipeId){
         long startTime = System.currentTimeMillis();
+        Recipie recipie = recipieDao.findByRecipeid(recipeId);
+        RecipeImage recipeImage = recipie.getImage();
+
+        if(recipeImage != null){
+            try{
+                recipeImageAwsService.deleteImage(recipeImage,recipeId);
+                recipeImageDao.delete(recipeImage);
+            }catch (Exception e){
+                logger.warn("Recipe image doesn't exist");
+            }
+        }
         recipieDao.deleteById(recipeId);
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
