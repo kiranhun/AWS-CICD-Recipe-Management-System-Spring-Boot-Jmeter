@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/v1/user").permitAll()
                     .antMatchers( HttpMethod.GET,"/v1/recipie/{id}").permitAll()
-                    .antMatchers(HttpMethod.GET, "/v2/recipie/{idRecipe}/image/{idImage}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/v1/recipie/{idRecipe}/image/{idImage}").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .httpBasic()
