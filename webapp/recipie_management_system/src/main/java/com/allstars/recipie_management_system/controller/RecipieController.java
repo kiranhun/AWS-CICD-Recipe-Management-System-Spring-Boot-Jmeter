@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
 @RestController
+@RequestMapping("v2/recipie/*")
 public class RecipieController {
 
     @Autowired
@@ -36,7 +37,7 @@ public class RecipieController {
         binder.setValidator(recipieValidator);
     }
 
-    @RequestMapping(value = "v1/recipie", method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<?> createRecipie(@RequestHeader("Authorization") String token, @Valid @RequestBody Recipie recipie, BindingResult errors,
                                            HttpServletResponse response) throws Exception{
         RecipieCreationStatus recipieCreationStatus;
@@ -53,7 +54,7 @@ public class RecipieController {
         }
     }
 
-    @RequestMapping(value = "v1/recipie/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Recipie> getRecipe(@PathVariable("id") String id) {
         //System.out.println(recipeId);
         //UUID recipeId = UUID.fromString(id);
@@ -64,7 +65,7 @@ public class RecipieController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/v1/recipie/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteRecipe(@PathVariable("id") String recipeId, @RequestHeader("Authorization") String token) throws UnsupportedEncodingException {
         String userDetails[] = decryptAuthenticationToken(token);
         Recipie existingRecipie = recipieService.getRecipe(recipeId);
@@ -78,7 +79,7 @@ public class RecipieController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @RequestMapping(value = "v1/recipie/{recipieid}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{recipieid}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateRecipie(@PathVariable("recipieid") String id, @RequestHeader("Authorization") String token, @Valid  @RequestBody Recipie recipie, BindingResult errors,
                                                 HttpServletResponse response) throws UnsupportedEncodingException {
 
