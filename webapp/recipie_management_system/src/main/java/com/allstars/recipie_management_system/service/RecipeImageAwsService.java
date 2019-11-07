@@ -12,8 +12,10 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
+import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +38,9 @@ public class RecipeImageAwsService implements RecipeImageService {
     private final static Logger logger = LoggerFactory.getLogger(RecipeImageService.class);
 
     private AmazonS3 s3client;
+
+    @Autowired
+    private StatsDClient statsDClient;
 
     private String dir = "Images";
 
@@ -62,8 +67,7 @@ public class RecipeImageAwsService implements RecipeImageService {
 
     @Override
     public RecipeImage uploadImage(MultipartFile multipartFile, String fileName, String recipeId, RecipeImage recipeImage) throws Exception {
-
-        logger.info(multipartFile.getName());
+;
 
         String name = this.dir + "/" + recipeId + "/" + fileName;
 
@@ -78,9 +82,11 @@ public class RecipeImageAwsService implements RecipeImageService {
         }
 
 
-
+        long startTime = System.currentTimeMillis();
         PutObjectResult data = s3client.putObject(bucketName, name, multipartFile.getInputStream(), new ObjectMetadata());
-
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime);
+        statsDClient.recordExecutionTime("uploadS3Call", duration);
         String fileUrl = endpointUrl + "/" + bucketName + "/" + name;
 
         recipeImage.setUrl(fileUrl);
@@ -93,9 +99,14 @@ public class RecipeImageAwsService implements RecipeImageService {
     public String deleteImage(RecipeImage recipeImage, String recipeId) throws Exception {
         String fileUrl= recipeImage.getUrl();
         String fileName = "Images/"+ recipeId + "/" + fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+        long startTime = System.currentTimeMillis();
         for (S3ObjectSummary file : s3client.listObjects(bucketName, fileName).getObjectSummaries()){
             s3client.deleteObject(bucketName, file.getKey());
         }
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime);
+        statsDClient.recordExecutionTime("deleteS3Call", duration);
+        logger.info("Image deleted Successfully");
         return "Successfully deleted";
     }
 

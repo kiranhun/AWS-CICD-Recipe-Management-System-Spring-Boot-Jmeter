@@ -110,12 +110,25 @@ Pre-req : Need tool to run REST endpoints like POSTMAN, MariaDB & IDE
                     404 Not Found
                 
             
-## Running Tests
+### Running Tests
 
     * Implemented Junit using Mockito for unit testing for creation of user & create recipe
     * Run Application using "Run All Tests"
 
-## CI/CD
-Om gam ganapataye namaha
+### CI/CD
+For CircleCi to read the config.yml we need to set inputs in CircleCI environment variables
+Setup your circleci user credentials in circle ci environment which is created in AWS console
+Setup code deploy bucket name which is the bucket created in AWS console for code deploy to upload the s3 artifact
+Setup the region in circle ci environment variables where the code deloy should take place
+Specify the branch name in circle ci for which build needs to be triggered
+
+Run the terraformIAM policy using `terraform plan` & `terraform apply` to associate the policy needed for code deploy to trigger
+Once a new ami is created, use that as source ami for infrastructure to be set up
+Run the terraform using `terraform plan` & `terraform apply` to setup IAC
+On git push or using the curl command to call circle ci API, code deploy is triggerd and check
+AWS console - Codedeploy to see the status of deployment and 
+Check the s3 bucket for artifacts - `codedeploy.dns.me`
+Check cloudwatch to view the logs created when you hit the API using the above enpoint variables 
+Cloudwatch metrics will give the sum and time taken by APIs
 
 
