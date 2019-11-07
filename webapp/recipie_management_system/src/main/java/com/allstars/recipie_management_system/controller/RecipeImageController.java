@@ -69,18 +69,18 @@ public class RecipeImageController {
         }
         Recipie recipie = recipieDao.findByRecipeid(idRecipe);
 
-        if (recipieService.isRecipeImagePresent(recipie)) {
-            logger.error("POST->Cover exist already perform PUT to modify");
-            long endTime = System.currentTimeMillis();
-            long duration = (endTime - startTime);
-            statsDClient.recordExecutionTime("postImageTime", duration);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{ \"error\": \"POST->Recipe Image exist already perform PUT to modify\" }");
-        }
-
         String userDetails[] = decryptAuthenticationToken(token);
 
         if (recipie != null) {
-
+            logger.error("My crecipe"+recipie);
+            if(recipieService.isRecipeImagePresent(recipie)) {
+                logger.error("POST->Cover exist already perform PUT to modify");
+                long endTime = System.currentTimeMillis();
+                long duration = (endTime - startTime);
+                statsDClient.recordExecutionTime("postImageTime", duration);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{ \"error\": \"POST->Recipe Image exist already perform PUT to modify\" }");
+            }
+            
             if (recipie.getUser().getEmailId().equalsIgnoreCase(userDetails[0])){
 
                 RecipeImage recipeImage = new RecipeImage();
