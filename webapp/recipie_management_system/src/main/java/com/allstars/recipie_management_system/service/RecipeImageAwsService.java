@@ -67,8 +67,7 @@ public class RecipeImageAwsService implements RecipeImageService {
 
     @Override
     public RecipeImage uploadImage(MultipartFile multipartFile, String fileName, String recipeId, RecipeImage recipeImage) throws Exception {
-
-        logger.info(multipartFile.getName());
+;
 
         String name = this.dir + "/" + recipeId + "/" + fileName;
 
@@ -107,6 +106,7 @@ public class RecipeImageAwsService implements RecipeImageService {
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
         statsDClient.recordExecutionTime("deleteS3Call", duration);
+        logger.info("Image deleted Successfully");
         return "Successfully deleted";
     }
 

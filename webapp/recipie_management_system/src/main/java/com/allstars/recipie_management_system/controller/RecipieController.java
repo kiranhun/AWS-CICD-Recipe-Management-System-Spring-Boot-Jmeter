@@ -82,7 +82,7 @@ public class RecipieController {
             statsDClient.recordExecutionTime("getRecipieTime", duration);
             return new ResponseEntity<Recipie>(recipe, HttpStatus.OK);
         }
-        logger.error("Recipe fetch failed");
+        logger.error("Recipe fetch failed. Recipe not found");
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
         statsDClient.recordExecutionTime("getRecipieTime", duration);
