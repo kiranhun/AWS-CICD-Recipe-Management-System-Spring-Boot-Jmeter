@@ -128,3 +128,76 @@ resource "aws_s3_bucket" "bucket" {
     }
   }
 }
+
+resource "aws_launch_configuration" "autoScaleConfig" {
+  image_id = var.image_id
+  instance_type = var.instance_type
+  key_name = var.key_pair
+  associate_public_ip_address = True
+  user_data = "${templatefile("${path.module}/user_data.sh",
+                                    {
+                                      aws_db_endpoint = "${aws_db_instance.rdsInstanceId.endpoint}",
+                                      bucketName = var.bucket_name,
+                                      dbName = var.db_name,
+                                      dbUserName = var.db_username,
+                                      dbPassword = var.db_password
+                                    })}"
+  iam_instance_profile = "${aws_iam_instance_profile.ec2instanceprofile.name}"
+  name = "asg_launch_config"
+}
+
+
+resource "aws_autoscaling_group" "autoScalingGroup" {
+  name = "autoScalingGroup"
+  max_size = 10
+  min_size = 3
+  default_cooldown = 60
+  launch_configuration = aws_launch_configuration.autoScaleConfig.name
+  desired_capacity = 3
+}
+
+resource "aws_autoscaling_policy" "awsAutoScalingPolicyUp" {
+  autoscaling_group_name = aws_autoscaling_group.autoScalingGroup.name
+  name = "awsAutoScalingPolicyUp"
+  adjustment_type = "ChangeInCapacity"
+  cooldown = 60
+  scaling_adjustment = 1
+}
+
+resource "aws_autoscaling_policy" "awsAutoScalingPolicyDown" {
+  autoscaling_group_name = aws_autoscaling_group.autoScalingGroup.name
+  name = "awsAutoScalingPolicyDown"
+  adjustment_type = "ChangeInCapacity"
+  cooldown = 60
+  scaling_adjustment = -1
+}
+
+resource "aws_cloudwatch_metric_alarm" "CPUAlarmHigh" {
+  alarm_name = "CPUAlarmHigh"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods = 2
+  threshold = 5
+  metric_name = "CPUUtilization"
+  dimensions {
+    AutoScalingGroupName = aws_autoscaling_policy.awsAutoScalingPolicyUp.name
+  }
+  alarm_actions = [aws_autoscaling_policy.awsAutoScalingPolicyUp.arn]
+  alarm_description = "Scale-up if CPU > 5%"
+  period = 300
+}
+
+resource "aws_cloudwatch_metric_alarm" "CPUAlarmLow" {
+  alarm_name = "CPUAlarmLow"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods = 2
+  threshold = 3
+  metric_name = "CPUUtilization"
+  dimensions {
+    AutoScalingGroupName = aws_autoscaling_policy.awsAutoScalingPolicyDown.name
+  }
+  alarm_actions = [aws_autoscaling_policy.awsAutoScalingPolicyDown.arn]
+  alarm_description = "Scale-up if CPU < 3%"
+  period = 300
+}
+
+
