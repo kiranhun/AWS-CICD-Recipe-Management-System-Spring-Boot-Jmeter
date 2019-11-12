@@ -47,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+
            /* http.authorizeRequests()
                     .antMatchers(HttpMethod.GET, "v1/user/self").fullyAuthenticated()
                     .anyRequest().permitAll();
