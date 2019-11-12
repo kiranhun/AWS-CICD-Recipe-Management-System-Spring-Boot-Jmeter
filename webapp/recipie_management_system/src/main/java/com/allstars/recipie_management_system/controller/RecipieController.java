@@ -21,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
 @RestController
-@RequestMapping("/v1/recipie/*")
+@RequestMapping("/v2/recipie/*")
 public class RecipieController {
 
     @Autowired
