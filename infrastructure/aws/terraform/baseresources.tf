@@ -11,6 +11,7 @@ module "networking" {
 
 module "ec2_host" {
     source              = "./modules/application"
+    vpcId               = module.networking.vpc_id
     subnet_id           = module.networking.subnet_id1
     subnet_id2          = module.networking.subnet_id2
     subnet_id3          = module.networking.subnet_id3

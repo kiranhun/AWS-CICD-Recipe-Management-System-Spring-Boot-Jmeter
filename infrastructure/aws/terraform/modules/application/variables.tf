@@ -44,6 +44,11 @@ variable "security_group" {
   type        = string
 }
 
+variable "vpcId" {
+  description = "VPC ID for EC2 Instance(s)"
+  type        = string
+}
+
 variable "subnet_id" {
   description = "Subnet ID for EC2 Instance(s). If multiple are provided, instances will be distributed amongst them."
   type        = string

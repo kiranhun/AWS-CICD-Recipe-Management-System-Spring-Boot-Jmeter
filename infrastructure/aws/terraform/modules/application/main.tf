@@ -35,33 +35,33 @@ resource "aws_iam_role_policy_attachment" "EC2ServiceRole_CRUD_policy_attach" {
   policy_arn = "${aws_iam_policy.s3Bucket-CRUD-Policy.arn}"
 }
 
-resource "aws_instance" "application_ec2" {
-  ami           = var.image_id
-  subnet_id     = var.subnet_id2
-  instance_type = var.instance_type
-  vpc_security_group_ids = [var.security_group]
-  key_name = var.key_pair
-  iam_instance_profile = "${aws_iam_instance_profile.ec2instanceprofile.name}"
-  user_data = "${templatefile("${path.module}/user_data.sh",
-                                    {
-                                      aws_db_endpoint = "${aws_db_instance.rdsInstanceId.endpoint}",
-                                      bucketName = var.bucket_name,
-                                      dbName = var.db_name,
-                                      dbUserName = var.db_username,
-                                      dbPassword = var.db_password
-                                    })}"
-
-  tags = {
-    Name = "Web Server"
-  }
-
- /* ebs_block_device {
-    device_name           = var.device_name
-    delete_on_termination = var.delete_on_termination
-  }*/
-  #add db dependency
-  depends_on = [aws_db_instance.rdsInstanceId, aws_s3_bucket.bucket, aws_iam_instance_profile.ec2instanceprofile ]
-}
+//resource "aws_instance" "application_ec2" {
+//  ami           = var.image_id
+//  subnet_id     = var.subnet_id2
+//  instance_type = var.instance_type
+//  vpc_security_group_ids = [var.security_group]
+//  key_name = var.key_pair
+//  iam_instance_profile = "${aws_iam_instance_profile.ec2instanceprofile.name}"
+//  user_data = "${templatefile("${path.module}/user_data.sh",
+//                                    {
+//                                      aws_db_endpoint = "${aws_db_instance.rdsInstanceId.endpoint}",
+//                                      bucketName = var.bucket_name,
+//                                      dbName = var.db_name,
+//                                      dbUserName = var.db_username,
+//                                      dbPassword = var.db_password
+//                                    })}"
+//
+//  tags = {
+//    Name = "Web Server"
+//  }
+//
+// /* ebs_block_device {
+//    device_name           = var.device_name
+//    delete_on_termination = var.delete_on_termination
+//  }*/
+//  #add db dependency
+//  depends_on = [aws_db_instance.rdsInstanceId, aws_s3_bucket.bucket, aws_iam_instance_profile.ec2instanceprofile ]
+//}
 
 resource "aws_db_subnet_group" "dbSubnetGroupId" {
   #name       = var.subnetGroupName
@@ -129,11 +129,26 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
+
+resource "aws_lb" "loadBalanceV2" {
+  name = "loadBalanceV2"
+  load_balancer_type = "application"
+  subnets = [var.subnet_id2,var.subnet_id3]
+}
+
+resource "aws_lb_target_group" "awsLbTargetGroup" {
+  name = "awsLbTargetGroup"
+  target_type = "instance"
+  port = 8080
+  protocol = "HTTP"
+  vpc_id = var.vpcId
+}
+
 resource "aws_launch_configuration" "autoScaleConfig" {
   image_id = var.image_id
   instance_type = var.instance_type
   key_name = var.key_pair
-  associate_public_ip_address = True
+  associate_public_ip_address = true
   user_data = "${templatefile("${path.module}/user_data.sh",
                                     {
                                       aws_db_endpoint = "${aws_db_instance.rdsInstanceId.endpoint}",
@@ -144,6 +159,8 @@ resource "aws_launch_configuration" "autoScaleConfig" {
                                     })}"
   iam_instance_profile = "${aws_iam_instance_profile.ec2instanceprofile.name}"
   name = "asg_launch_config"
+  security_groups = [var.security_group]
+  depends_on = [aws_db_instance.rdsInstanceId, aws_s3_bucket.bucket, aws_iam_instance_profile.ec2instanceprofile]
 }
 
 
@@ -154,6 +171,15 @@ resource "aws_autoscaling_group" "autoScalingGroup" {
   default_cooldown = 60
   launch_configuration = aws_launch_configuration.autoScaleConfig.name
   desired_capacity = 3
+  availability_zones = ["us-east-1a"]
+  target_group_arns = [aws_lb_target_group.awsLbTargetGroup.arn]
+  vpc_zone_identifier = [var.subnet_id2,var.subnet_id3,var.subnet_id]
+  tag {
+    key = "env"
+    propagate_at_launch = true
+    value = "prod"
+  }
+  depends_on = [aws_lb.loadBalanceV2]
 }
 
 resource "aws_autoscaling_policy" "awsAutoScalingPolicyUp" {
@@ -178,9 +204,12 @@ resource "aws_cloudwatch_metric_alarm" "CPUAlarmHigh" {
   evaluation_periods = 2
   threshold = 5
   metric_name = "CPUUtilization"
-  dimensions {
-    AutoScalingGroupName = aws_autoscaling_policy.awsAutoScalingPolicyUp.name
+  statistic = "Average"
+  namespace = "AWS/EC2"
+  dimensions = {
+    AutoScalingGroupName = "${aws_autoscaling_policy.awsAutoScalingPolicyUp.name}"
   }
+
   alarm_actions = [aws_autoscaling_policy.awsAutoScalingPolicyUp.arn]
   alarm_description = "Scale-up if CPU > 5%"
   period = 300
@@ -192,12 +221,12 @@ resource "aws_cloudwatch_metric_alarm" "CPUAlarmLow" {
   evaluation_periods = 2
   threshold = 3
   metric_name = "CPUUtilization"
-  dimensions {
+  statistic = "Average"
+  namespace = "AWS/EC2"
+  dimensions = {
     AutoScalingGroupName = aws_autoscaling_policy.awsAutoScalingPolicyDown.name
   }
   alarm_actions = [aws_autoscaling_policy.awsAutoScalingPolicyDown.arn]
   alarm_description = "Scale-up if CPU < 3%"
   period = 300
 }
-
-
