@@ -211,3 +211,13 @@ variable "ec2RoleName" {
   description = "ec2 role name."
   type        = string
 }
+
+variable "codedeploy_lambda_s3_bucket" {
+  description = "Name of code deploy s3 bucket"
+  #default     = "codedeploylambda.veenaiyer.me"
+}
+
+variable "domain_name" {
+  description = "Name of code deploy s3 bucket"
+}
+
