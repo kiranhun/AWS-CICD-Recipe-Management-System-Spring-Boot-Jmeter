@@ -1,3 +1,14 @@
+resource "aws_security_group" "loadBalancerSecurityGroup" {
+  name = "loadBalancerSecurityGroup"
+  vpc_id = module.networking.vpc_id
+  ingress {
+    from_port = 443
+    protocol = "tcp"
+    to_port = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_security_group" "webapp"{
   name = "application"
   vpc_id = module.networking.vpc_id
@@ -5,25 +16,26 @@ resource "aws_security_group" "webapp"{
     Name = "application security group"
   }
 
-  ingress {
-    to_port = 22
-    from_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+//  ingress {
+//    to_port = 22
+//    from_port = 22
+//    protocol = "tcp"
+//    cidr_blocks = ["0.0.0.0/0"]
+//  }
 
-  ingress {
-    to_port = 80
-    from_port = 80
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+//  ingress {
+//    to_port = 80
+//    from_port = 80
+//    protocol = "tcp"
+//    cidr_blocks = ["0.0.0.0/0"]
+//  }
 
   ingress {
     to_port = 443
     from_port = 443
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+//    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [aws_security_group.loadBalancerSecurityGroup.id]
   }
 
   ingress {
@@ -39,6 +51,7 @@ resource "aws_security_group" "webapp"{
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
 
 }
 

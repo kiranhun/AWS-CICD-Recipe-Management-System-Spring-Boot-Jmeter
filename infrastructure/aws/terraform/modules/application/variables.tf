@@ -44,6 +44,11 @@ variable "security_group" {
   type        = string
 }
 
+variable "webapp_security_group" {
+  description = "Security Group assigned to webapp"
+  type        = string
+}
+
 variable "vpcId" {
   description = "VPC ID for EC2 Instance(s)"
   type        = string
