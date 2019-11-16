@@ -93,7 +93,7 @@ resource "aws_iam_policy" "CircleCI-Upload-To-S3" {
             "Action": [
                 "s3:PutObject"
             ],
-            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}/*"]
+            "Resource": ["arn:aws:s3:::${var.code_deploy_s3_bucket}/*","arn:aws:s3:::${var.codedeploy_lambda_s3_bucket}/*"]
         }
     ]
 }
