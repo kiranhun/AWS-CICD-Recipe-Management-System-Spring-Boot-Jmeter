@@ -175,4 +175,25 @@ public class RecipieService {
             return null;
         }
     }
+
+    public Recipie getLatestRecipie() {
+        try{
+            long startTime = System.currentTimeMillis();
+            Recipie latestRecipe = null;
+            if(recipieDao.findFirstByCreated_ts().get(0)!=null) {
+                latestRecipe = recipieDao.findFirstByCreated_ts().get(0);
+            }
+
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+
+            statsDClient.recordExecutionTime("dbQueryLatestRecipe",duration);
+            logger.info("Get latest recipe from DB");
+
+            return latestRecipe;
+        } catch (Exception exc) {
+            logger.error("Could not get latest Recipe from the dB");
+            return null;
+        }
+    }
 }

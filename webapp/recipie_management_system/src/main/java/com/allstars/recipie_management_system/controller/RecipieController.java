@@ -196,4 +196,24 @@ public class RecipieController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
+
+    @RequestMapping(value= "/v1/recipes", method = RequestMethod.GET)
+    public ResponseEntity<?> getLatestRecipe()  {
+        statsDClient.incrementCounter("endpoint.v1.recipes.api.get");
+        long startTime = System.currentTimeMillis();
+        Recipie recipe = null;
+        if(recipieService.getLatestRecipie()!=null){
+            recipe = recipieService.getLatestRecipie();
+            logger.info("Latest Recipe fetch successful");
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("getRecipieTime", duration);
+            return new ResponseEntity<Recipie>(recipe, HttpStatus.OK);
+        }
+        logger.error("Recipe fetch failed. Recipe not found");
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime);
+        statsDClient.recordExecutionTime("getRecipieTime", duration);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
 }

@@ -15,4 +15,6 @@ public interface RecipieDao extends CrudRepository<Recipie, String> {
     Recipie findByRecipeid(String id);
 
     List<Recipie> findByRecipeId(String id);
+
+    List<Recipie> findFirstByCreated_ts();
 }
