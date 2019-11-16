@@ -5,20 +5,30 @@ import com.allstars.recipie_management_system.entity.User;
 import com.allstars.recipie_management_system.errors.RecipieCreationStatus;
 import com.allstars.recipie_management_system.service.RecipieService;
 import com.allstars.recipie_management_system.validators.RecipieValidator;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.model.PublishRequest;
 import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v2/recipie/*")
@@ -45,18 +55,18 @@ public class RecipieController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<?> createRecipie(@RequestHeader("Authorization") String token, @Valid @RequestBody Recipie recipie, BindingResult errors,
-                                           HttpServletResponse response) throws Exception{
+                                           HttpServletResponse response) throws Exception {
         RecipieCreationStatus recipieCreationStatus;
         long startTime = System.currentTimeMillis();
         statsDClient.incrementCounter("endpoint.recipie.api.post");
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             recipieCreationStatus = recipieService.getRecipieCreationStatus(errors);
             logger.error("Recipe Creation Failed");
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime);
             statsDClient.recordExecutionTime("postRecipieTime", duration);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(recipieCreationStatus);
-        }else {
+        } else {
             String[] authDetails = decryptAuthenticationToken(token);
             User user = userdao.findByEmailId(authDetails[0]);
             Recipie newrecipie = recipieService.SaveRecipie(recipie, user);
@@ -75,7 +85,7 @@ public class RecipieController {
         //System.out.println(recipeId);
         //UUID recipeId = UUID.fromString(id);
         Recipie recipe = recipieService.getRecipe(id);
-        if (null!=recipe) {
+        if (null != recipe) {
             logger.info("Recipe fetch successful");
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime);
@@ -95,15 +105,15 @@ public class RecipieController {
         long startTime = System.currentTimeMillis();
         String userDetails[] = decryptAuthenticationToken(token);
         Recipie existingRecipie = recipieService.getRecipe(recipeId);
-        if(null != existingRecipie){
-            if(existingRecipie.getUser().getEmailId().equalsIgnoreCase(userDetails[0])) {
+        if (null != existingRecipie) {
+            if (existingRecipie.getUser().getEmailId().equalsIgnoreCase(userDetails[0])) {
                 recipieService.deleteRecipe(recipeId);
                 logger.info("Recipe delete successful");
                 long endTime = System.currentTimeMillis();
                 long duration = (endTime - startTime);
                 statsDClient.recordExecutionTime("deleteRecipieTime", duration);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-            }else {
+            } else {
                 logger.error("user not authorised to delete this recipe");
                 long endTime = System.currentTimeMillis();
                 long duration = (endTime - startTime);
@@ -119,20 +129,20 @@ public class RecipieController {
     }
 
     @RequestMapping(value = "/{recipieid}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateRecipie(@PathVariable("recipieid") String id, @RequestHeader("Authorization") String token, @Valid  @RequestBody Recipie recipie, BindingResult errors,
-                                                HttpServletResponse response) throws UnsupportedEncodingException {
+    public ResponseEntity<?> updateRecipie(@PathVariable("recipieid") String id, @RequestHeader("Authorization") String token, @Valid @RequestBody Recipie recipie, BindingResult errors,
+                                           HttpServletResponse response) throws UnsupportedEncodingException {
         statsDClient.incrementCounter("endpoint.recipie.recipieid.api.put");
         RecipieCreationStatus recipieCreationStatus;
         long startTime = System.currentTimeMillis();
 
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             recipieCreationStatus = recipieService.getRecipieCreationStatus(errors);
             logger.error("Recipe update failed");
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime);
             statsDClient.recordExecutionTime("putRecipieTime", duration);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(recipieCreationStatus);
-        }else {
+        } else {
             String[] authDetails = decryptAuthenticationToken(token);
             String userEmailID = authDetails[0];
             String t_id = id;
@@ -140,7 +150,7 @@ public class RecipieController {
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime);
             statsDClient.recordExecutionTime("putRecipieTime", duration);
-            return recipieService.updateRecipie(t_id,userEmailID,recipie);
+            return recipieService.updateRecipie(t_id, userEmailID, recipie);
         }
 
     }
@@ -148,6 +158,42 @@ public class RecipieController {
     public String[] decryptAuthenticationToken(String token) throws UnsupportedEncodingException {
         String[] basicAuthToken = token.split(" ");
         byte[] authKeys = Base64.getDecoder().decode(basicAuthToken[1]);
-        return new String(authKeys,"utf-8").split(":");
+        return new String(authKeys, "utf-8").split(":");
+    }
+
+    @RequestMapping(value = "/v1/myrecipies", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllRecipes(Principal principal) throws Exception {
+        statsDClient.incrementCounter("endpoint.v1.myrecipies.api.post");
+
+        String name = principal.getName();
+        User user = userdao.findByEmailId(name);
+        if (user == null) {
+            logger.error("No user found with the username : " + user);
+            //throw new UsernameNotFoundException("No user found with the username : " + user);
+        }
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("UserEmailAddress", name);
+
+        List<Recipie> allRecipes = recipieService.getAllRecipes(user.getUuid());
+
+        for (int i = 0; i < allRecipes.size(); i++) {
+
+            jsonArray.add(allRecipes.get(i).getRecipeId()); // the value can also be a json object or a json array
+            logger.info("Entries: " + allRecipes.get(i).getRecipeId());
+        }
+        jsonObj.put("RecipeID", jsonArray);
+
+        System.out.println("The recipeID " + jsonObj.get("RecipeID"));
+        System.out.println("The email address " + jsonObj.get("UserEmailAddress"));
+
+        AmazonSNS sns = AmazonSNSClientBuilder.standard().build();
+
+        String topic = sns.createTopic("EmailNotificationRecipeEndpoint").getTopicArn();
+        logger.info(topic);
+        PublishRequest pubRequest = new PublishRequest(topic, jsonObj.toString());
+        sns.publish(pubRequest);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
 }

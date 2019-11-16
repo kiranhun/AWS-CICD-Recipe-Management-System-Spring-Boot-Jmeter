@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -151,6 +152,26 @@ public class RecipieService {
         try{
             return recipieDao.findById(idRecipe);
         }catch(Exception exc) {
+            return null;
+        }
+    }
+
+    public List<Recipie> getAllRecipes(String id) {
+
+        try{
+            long startTime =  System.currentTimeMillis();
+
+            List<Recipie> allRecipes=recipieDao.findByRecipeId(id);
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+
+            statsDClient.recordExecutionTime("dbQueryTimeGetAllRecipe",duration);
+
+            logger.info("Get All recipe from DB");
+
+            return allRecipes;
+        }catch(Exception exc) {
+            logger.error("Could not find Recipes for the given userId");
             return null;
         }
     }
