@@ -47,3 +47,13 @@ variable "ec2RoleName" {
   description = "ec2 role name."
   type        = string
 }
+
+variable "codedeploy_lambda_s3_bucket" {
+  description = "codeDeploy Lambda s3 Bucket."
+  type        = string
+}
+
+variable "domain_name" {
+  description = "domain name"
+  type        = string
+}

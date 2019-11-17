@@ -44,6 +44,16 @@ variable "security_group" {
   type        = string
 }
 
+variable "webapp_security_group" {
+  description = "Security Group assigned to webapp"
+  type        = string
+}
+
+variable "vpcId" {
+  description = "VPC ID for EC2 Instance(s)"
+  type        = string
+}
+
 variable "subnet_id" {
   description = "Subnet ID for EC2 Instance(s). If multiple are provided, instances will be distributed amongst them."
   type        = string
@@ -214,7 +224,6 @@ variable "ec2RoleName" {
 
 variable "codedeploy_lambda_s3_bucket" {
   description = "Name of code deploy s3 bucket"
-  #default     = "codedeploylambda.veenaiyer.me"
 }
 
 variable "domain_name" {
