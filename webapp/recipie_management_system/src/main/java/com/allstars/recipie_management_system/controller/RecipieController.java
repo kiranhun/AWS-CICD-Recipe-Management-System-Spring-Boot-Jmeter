@@ -31,7 +31,7 @@ import java.util.Base64;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v2/recipie/*")
+@RequestMapping("/v1/recipie/*")
 public class RecipieController {
 
     @Autowired
@@ -161,7 +161,7 @@ public class RecipieController {
         return new String(authKeys, "utf-8").split(":");
     }
 
-    @RequestMapping(value = "/v1/myrecipies", method = RequestMethod.GET)
+    @RequestMapping(value = "/myrecipies", method = RequestMethod.GET)
     public ResponseEntity<?> getAllRecipes(Principal principal) throws Exception {
         statsDClient.incrementCounter("endpoint.v1.myrecipies.api.post");
 
@@ -197,7 +197,7 @@ public class RecipieController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
 
-    @RequestMapping(value= "/v1/recipes", method = RequestMethod.GET)
+    @RequestMapping(value= "/recipes", method = RequestMethod.GET)
     public ResponseEntity<?> getLatestRecipe()  {
         statsDClient.incrementCounter("endpoint.v1.recipes.api.get");
         long startTime = System.currentTimeMillis();
