@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
@@ -45,6 +46,11 @@ public class RecipieController {
 
     @Autowired
     private StatsDClient statsDClient;
+
+    @Value("${amazonProperties.accessKey}")
+    private String access;
+    @Value("${amazonProperties.secretKey}")
+    private String secret;
 
     private final static Logger logger = LoggerFactory.getLogger(RecipieController.class);
 
@@ -161,19 +167,20 @@ public class RecipieController {
         return new String(authKeys, "utf-8").split(":");
     }
 
-    @RequestMapping(value = "/myrecipies", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllRecipes(Principal principal) throws Exception {
+    @RequestMapping(value = "/myrecipies", method = RequestMethod.POST)
+    public ResponseEntity<?> getAllRecipes(@RequestHeader("Authorization") String token, HttpServletRequest request) throws Exception {
         statsDClient.incrementCounter("endpoint.v1.myrecipies.api.post");
 
-        String name = principal.getName();
-        User user = userdao.findByEmailId(name);
+        //String name = principal.getName();
+        String userDetails[] = decryptAuthenticationToken(token);
+        User user = userdao.findByEmailId(userDetails[0]);
         if (user == null) {
             logger.error("No user found with the username : " + user);
             //throw new UsernameNotFoundException("No user found with the username : " + user);
         }
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObj = new JSONObject();
-        jsonObj.put("UserEmailAddress", name);
+        jsonObj.put("UserEmailAddress",userDetails[0]);
 
         List<Recipie> allRecipes = recipieService.getAllRecipes(user.getUuid());
 
@@ -187,7 +194,7 @@ public class RecipieController {
         System.out.println("The recipeID " + jsonObj.get("RecipeID"));
         System.out.println("The email address " + jsonObj.get("UserEmailAddress"));
 
-        AmazonSNS sns = AmazonSNSClientBuilder.standard().build();
+        AmazonSNS sns = AmazonSNSClientBuilder.standard().withRegion("us-east-1").build();
 
         String topic = sns.createTopic("EmailNotificationRecipeEndpoint").getTopicArn();
         logger.info(topic);

@@ -158,7 +158,7 @@ resource "aws_lb_listener" "awsLoadBalancer" {
     target_group_arn = aws_lb_target_group.awsLbTargetGroup.arn
   }
   ssl_policy = "ELBSecurityPolicy-2016-08"
-  certificate_arn = "arn:aws:acm:us-east-1:681208874633:certificate/f8c7eb8f-b0db-47ea-8b35-3bdbcc3baf5a"
+  certificate_arn = "arn:aws:acm:us-east-1:015314885011:certificate/494ab667-d107-443c-a933-54a6bc45d9ca"
   protocol = "HTTPS"
   depends_on = [aws_lb.loadBalanceV2]
 }
@@ -256,8 +256,8 @@ resource "aws_cloudwatch_metric_alarm" "CPUAlarmLow" {
 }
 
 resource "aws_route53_record" "csye-dns" {
-  zone_id = "Z1N5U08TVOZETK"
-  name = "prod.kiranravi.me"
+  zone_id = "Z24FG931OV0JC3"
+  name = "prod.amoghdoijode.me"
   type    = "A"
   alias {
     name                   = "${aws_lb.loadBalanceV2.dns_name}"
@@ -403,14 +403,14 @@ s3_bucket       = var.codedeploy_lambda_s3_bucket
 s3_key          = "index.zip"
 function_name   = "csye6225"
 role            = "${aws_iam_role.CodeDeployLambdaServiceRole.arn}"
-handler         = "com.neu.LambdaFunc::handleRequest"
+handler         = "com.neu.LambdaFunc.EmailEvent::handleRequest"
 runtime         = "java8"
 memory_size     = 256
 timeout         = 180
 reserved_concurrent_executions  = 5
 environment  {
 variables = {
-domain = var.domain_name
+DOMAIN_NAME = var.domain_name
 table  = aws_dynamodb_table.dynamodb-table.name
 }
 }
@@ -452,7 +452,7 @@ policy =  <<EOF
               "Action": ["dynamodb:GetItem",
               "dynamodb:PutItem",
               "dynamodb:UpdateItem"],
-              "Resource": "arn:aws:dynamodb:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:table/csye6225"
+              "Resource": "arn:aws:dynamodb:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:table/dynamo_csye6225"
             },
             {
               "Sid": "LambdaSESAccess",
@@ -498,6 +498,13 @@ policy      = <<EOF
         }
 EOF
 }
+
+resource "aws_iam_role_policy_attachment" "topic_policy_attach" {
+  role       = var.ec2RoleName
+  depends_on = [aws_iam_policy.topic_policy]
+  policy_arn = "${aws_iam_policy.topic_policy.arn}"
+}
+
 
 resource "aws_iam_policy" "CircleCI-update-lambda-To-S3" {
 name        = "CircleCI-update-lambda-To-S3"
