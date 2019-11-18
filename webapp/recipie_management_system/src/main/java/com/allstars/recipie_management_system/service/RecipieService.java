@@ -47,7 +47,7 @@ public class RecipieService {
         try {
             recipie.setUser(user);
             recipie.setAuthor_id(user.getUuid());
-            recipie.setCreated_ts(new Date());
+            recipie.setCreatedts(new Date());
             recipie.setUpdated_ts();
             recipie.setTotal_time_in_min();
             long startTime = System.currentTimeMillis();
@@ -128,7 +128,7 @@ public class RecipieService {
                 recipie.setRecipeId(retrivedRecipie.getRecipeId());
                 recipie.setUser(retrivedRecipie.getUser());
                 recipie.setAuthor_id(retrivedRecipie.getAuthor_id());
-                recipie.setCreated_ts(retrivedRecipie.getCreated_ts());
+                recipie.setCreatedts(retrivedRecipie.getCreatedts());
                 recipie.setUpdated_ts();
                 recipie.setTotal_time_in_min();
                 recipieDao.save(recipie);
@@ -156,12 +156,12 @@ public class RecipieService {
         }
     }
 
-    public List<Recipie> getAllRecipes(String id) {
+    public List<Recipie> getAllRecipes(String author_id) {
 
         try{
             long startTime =  System.currentTimeMillis();
 
-            List<Recipie> allRecipes=recipieDao.findByRecipeId(id);
+            List<Recipie> allRecipes=recipieDao.findByAuthorid(author_id);
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime);
 
@@ -180,8 +180,8 @@ public class RecipieService {
         try{
             long startTime = System.currentTimeMillis();
             Recipie latestRecipe = null;
-            if(recipieDao.findFirstByCreated_ts().get(0)!=null) {
-                latestRecipe = recipieDao.findFirstByCreated_ts().get(0);
+            if(recipieDao.findTopByOrderByCreatedtsDesc()!=null) {
+                latestRecipe = recipieDao.findTopByOrderByCreatedtsDesc();
             }
 
             long endTime = System.currentTimeMillis();

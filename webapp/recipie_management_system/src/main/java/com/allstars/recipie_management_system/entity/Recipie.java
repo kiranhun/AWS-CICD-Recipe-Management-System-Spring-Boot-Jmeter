@@ -24,7 +24,7 @@ public class Recipie {
     private String recipeid;
 
     @Column
-    private Date created_ts;
+    private Date createdts;
 
     @Column
     private Date updated_ts;
@@ -34,7 +34,7 @@ public class Recipie {
     private User user;
 
     @Column
-    private String author_id;
+    private String authorid;
 
     @Column
     private Integer cook_time_in_min;
@@ -95,11 +95,11 @@ public class Recipie {
     }
 
     public String getAuthor_id() {
-        return author_id;
+        return authorid;
     }
 
     public void setAuthor_id(String author_id) {
-        this.author_id = author_id;
+        this.authorid = author_id;
     }
 
     public String getRecipeId() {
@@ -110,12 +110,12 @@ public class Recipie {
         this.recipeid = recipeId;
     }
 
-    public Date getCreated_ts() {
-        return created_ts;
+    public Date getCreatedts() {
+        return createdts;
     }
 
-    public void setCreated_ts(Date created_ts) {
-        this.created_ts = created_ts;
+    public void setCreatedts(Date created_ts) {
+        this.createdts = created_ts;
     }
 
     public Date getUpdated_ts() {
