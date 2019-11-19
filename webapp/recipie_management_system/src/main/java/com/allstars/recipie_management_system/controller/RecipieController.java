@@ -47,11 +47,6 @@ public class RecipieController {
     @Autowired
     private StatsDClient statsDClient;
 
-    @Value("${amazonProperties.accessKey}")
-    private String access;
-    @Value("${amazonProperties.secretKey}")
-    private String secret;
-
     private final static Logger logger = LoggerFactory.getLogger(RecipieController.class);
 
     @InitBinder
