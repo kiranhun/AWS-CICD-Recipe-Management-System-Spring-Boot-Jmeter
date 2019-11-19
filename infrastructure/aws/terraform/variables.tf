@@ -57,3 +57,15 @@ variable "domain_name" {
   description = "domain name"
   type        = string
 }
+
+variable "dnsName" {
+  description = "Name of dns, example: prod.xxxxxxxx.me"
+}
+
+variable "route53ZoneId" {
+  description = "route53 zone id"
+}
+
+variable "certificate_arn" {
+  description = "Certificate arn"
+}
