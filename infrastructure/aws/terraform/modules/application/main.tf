@@ -158,7 +158,7 @@ resource "aws_lb_listener" "awsLoadBalancer" {
     target_group_arn = aws_lb_target_group.awsLbTargetGroup.arn
   }
   ssl_policy = "ELBSecurityPolicy-2016-08"
-  certificate_arn = "arn:aws:acm:us-east-1:015314885011:certificate/494ab667-d107-443c-a933-54a6bc45d9ca"
+  certificate_arn = var.certificate_arn
   protocol = "HTTPS"
   depends_on = [aws_lb.loadBalanceV2]
 }
@@ -259,8 +259,8 @@ resource "aws_cloudwatch_metric_alarm" "CPUAlarmLow" {
 }
 
 resource "aws_route53_record" "csye-dns" {
-  zone_id = "Z24FG931OV0JC3"
-  name = "prod.amoghdoijode.me"
+  zone_id = var.route53ZoneId
+  name = var.dnsName
   type    = "A"
   alias {
     name                   = "${aws_lb.loadBalanceV2.dns_name}"

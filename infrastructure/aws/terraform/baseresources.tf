@@ -26,4 +26,7 @@ module "ec2_host" {
     ec2RoleName		= var.ec2RoleName
     codedeploy_lambda_s3_bucket = var.codedeploy_lambda_s3_bucket
     domain_name = var.domain_name
+    dnsName = var.dnsName
+    route53ZoneId = var.route53ZoneId
+    certificate_arn = var.certificate_arn
 }
