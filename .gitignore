@@ -144,14 +144,6 @@ venv.bak/
 *.tfstate.*
 *.backup
 
-#idea
-*.idea/
-*.idea/*
-.idea
-*.iws
-*.iml
-*.ipr
-
 #war
 .war
 

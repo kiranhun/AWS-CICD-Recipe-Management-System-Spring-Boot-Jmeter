@@ -199,7 +199,7 @@ public class RecipieController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
 
-    @RequestMapping(value= "recipes", method = RequestMethod.GET)
+    @RequestMapping(value= "recipies", method = RequestMethod.GET)
     public ResponseEntity<?> getLatestRecipe()  {
         statsDClient.incrementCounter("endpoint.v1.recipes.api.get");
         long startTime = System.currentTimeMillis();
