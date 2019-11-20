@@ -193,7 +193,7 @@ resource "aws_launch_configuration" "autoScaleConfig" {
 }
 resource "aws_autoscaling_group" "autoScalingGroup" {
   name = "autoScalingGroup"
-  max_size = 5
+  max_size = 10
   min_size = 3
   default_cooldown = 60
   launch_configuration = aws_launch_configuration.autoScaleConfig.name
