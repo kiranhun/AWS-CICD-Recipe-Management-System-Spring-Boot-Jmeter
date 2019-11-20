@@ -132,3 +132,17 @@ Check cloudwatch to view the logs created when you hit the API using the above e
 Cloudwatch metrics will give the sum and time taken by APIs
 
 
+### JMeter
+
+We are using JMeter to create load on our load balancer which would increase the cpu utilization of the ec2 instances which in turn should scale up the ec2 as per the policies.
+
+Steps to install JMeter:
+	1)	Download binaries from http://jmeter.apache.org/download_jmeter.cgi
+	2)	Extract the files to your desired folder.
+	3)	Go to bin folder with apache-jmeter-5.2 and run JMeter using ./jmeter
+	4)	JMeter gui should open
+	5) Open the PostRecipe.jmx
+	6) Go to HTTP Authorization Manager and update the email id and password of the user you created
+	7) Change the server name/ ip in Http Request header to your server name
+	7) Run JMeter. Current configuration will create 500 threads and rampup in 100 seconds
+

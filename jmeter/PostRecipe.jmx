@@ -69,7 +69,7 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">prod.kiranravi.me</stringProp>
+          <stringProp name="HTTPSampler.domain">prod.veenaiyer.me</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -134,8 +134,8 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url"></stringProp>
-                <stringProp name="Authorization.username">kiranhun@gmail.com</stringProp>
-                <stringProp name="Authorization.password">WonderFul@28</stringProp>
+                <stringProp name="Authorization.username">veenaiyer1792@gmail.com</stringProp>
+                <stringProp name="Authorization.password">Password@123</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>

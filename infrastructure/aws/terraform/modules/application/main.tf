@@ -254,7 +254,7 @@ resource "aws_cloudwatch_metric_alarm" "CPUAlarmLow" {
     AutoScalingGroupName = aws_autoscaling_group.autoScalingGroup.name
   }
   alarm_actions = [aws_autoscaling_policy.awsAutoScalingPolicyDown.arn]
-  alarm_description = "Scale-up if CPU < 3%"
+  alarm_description = "Scale-down if CPU < 3%"
   period = 60
 }
 
