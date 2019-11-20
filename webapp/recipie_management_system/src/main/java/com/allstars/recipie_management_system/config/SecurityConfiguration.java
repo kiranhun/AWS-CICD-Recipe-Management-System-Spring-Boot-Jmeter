@@ -41,6 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/v1/user").permitAll()
                     .antMatchers( HttpMethod.GET,"/v1/recipie/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/v1/recipie/{idRecipe}/image/{idImage}").permitAll()
+                    .antMatchers( HttpMethod.GET,"/v1/recipies").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .httpBasic()

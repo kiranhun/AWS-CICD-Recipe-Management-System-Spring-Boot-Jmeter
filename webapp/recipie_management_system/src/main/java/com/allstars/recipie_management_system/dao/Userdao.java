@@ -16,4 +16,5 @@ public interface Userdao extends CrudRepository<User, String> {
 
     @Query("SELECT count(emailId) FROM User WHERE emailId=:emailId")
     int isEmailPresent(@Param("emailId") String emailId);
+
 }

@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,7 +47,7 @@ public class RecipieService {
         try {
             recipie.setUser(user);
             recipie.setAuthor_id(user.getUuid());
-            recipie.setCreated_ts(new Date());
+            recipie.setCreatedts(new Date());
             recipie.setUpdated_ts();
             recipie.setTotal_time_in_min();
             long startTime = System.currentTimeMillis();
@@ -127,7 +128,7 @@ public class RecipieService {
                 recipie.setRecipeId(retrivedRecipie.getRecipeId());
                 recipie.setUser(retrivedRecipie.getUser());
                 recipie.setAuthor_id(retrivedRecipie.getAuthor_id());
-                recipie.setCreated_ts(retrivedRecipie.getCreated_ts());
+                recipie.setCreatedts(retrivedRecipie.getCreatedts());
                 recipie.setUpdated_ts();
                 recipie.setTotal_time_in_min();
                 recipieDao.save(recipie);
@@ -151,6 +152,47 @@ public class RecipieService {
         try{
             return recipieDao.findById(idRecipe);
         }catch(Exception exc) {
+            return null;
+        }
+    }
+
+    public List<Recipie> getAllRecipes(String author_id) {
+
+        try{
+            long startTime =  System.currentTimeMillis();
+
+            List<Recipie> allRecipes=recipieDao.findByAuthorid(author_id);
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+
+            statsDClient.recordExecutionTime("dbQueryTimeGetAllRecipe",duration);
+
+            logger.info("Get All recipe from DB");
+
+            return allRecipes;
+        }catch(Exception exc) {
+            logger.error("Could not find Recipes for the given userId");
+            return null;
+        }
+    }
+
+    public Recipie getLatestRecipie() {
+        try{
+            long startTime = System.currentTimeMillis();
+            Recipie latestRecipe = null;
+            if(recipieDao.findTopByOrderByCreatedtsDesc()!=null) {
+                latestRecipe = recipieDao.findTopByOrderByCreatedtsDesc();
+            }
+
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+
+            statsDClient.recordExecutionTime("dbQueryLatestRecipe",duration);
+            logger.info("Get latest recipe from DB");
+
+            return latestRecipe;
+        } catch (Exception exc) {
+            logger.error("Could not get latest Recipe from the dB");
             return null;
         }
     }

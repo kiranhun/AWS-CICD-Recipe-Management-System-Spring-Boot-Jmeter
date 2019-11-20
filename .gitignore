@@ -144,9 +144,6 @@ venv.bak/
 *.tfstate.*
 *.backup
 
-#idea
-.idea/
-
 #war
 .war
 

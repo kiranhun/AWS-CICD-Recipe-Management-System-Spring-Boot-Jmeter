@@ -44,6 +44,16 @@ variable "security_group" {
   type        = string
 }
 
+variable "webapp_security_group" {
+  description = "Security Group assigned to webapp"
+  type        = string
+}
+
+variable "vpcId" {
+  description = "VPC ID for EC2 Instance(s)"
+  type        = string
+}
+
 variable "subnet_id" {
   description = "Subnet ID for EC2 Instance(s). If multiple are provided, instances will be distributed amongst them."
   type        = string
@@ -210,4 +220,24 @@ variable "bucket_name" {
 variable "ec2RoleName" {
   description = "ec2 role name."
   type        = string
+}
+
+variable "codedeploy_lambda_s3_bucket" {
+  description = "Name of code deploy s3 bucket"
+}
+
+variable "domain_name" {
+  description = "Name of code deploy s3 bucket"
+}
+
+variable "dnsName" {
+  description = "Name of dns, example: prod.xxxxxxxx.me"
+}
+
+variable "route53ZoneId" {
+  description = "route53 zone id"
+}
+
+variable "certificate_arn" {
+  description = "Certificate arn"
 }
