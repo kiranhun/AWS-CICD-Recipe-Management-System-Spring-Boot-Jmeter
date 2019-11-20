@@ -568,8 +568,8 @@ policy_arn = "${aws_iam_policy.topic_policy.arn}"
 //   policy_arn = "${aws_iam_policy.circleci-ec2-ami.arn}"
 // }
 resource "aws_cloudformation_stack" "waf" {
-   name = "waf-stack"
-  # depends_on=[aws_lb.loadBalance]
+name = "waf-stack"
+depends_on=[aws_lb.loadBalanceV2]
     # parameters = {
     # ALB = "${aws_lb.loadBalance.arn}"
     # }
